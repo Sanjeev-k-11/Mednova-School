@@ -10,7 +10,7 @@ This system is not just an internal ERP; it also includes a fully integrated **C
 
 ### 🔴 **Live Demo**
 
-**[your-live-demo-link.com](https://skyschool.mednova.store/)**
+**[Live ](https://skyschool.mednova.store/)**
 
 *(Please provide default login credentials for different roles in the demo)*
 
@@ -91,7 +91,7 @@ Follow these steps to set up the project locally.
 
 1.  **Clone the Repository**
     ```bash
-    git clone https://github.com/your-username/mednova-school.git
+    git clone https://github.com/Sanjeev-k-11/mednova-school.git
     ```
 
 2.  **Move to `htdocs`**
@@ -149,9 +149,15 @@ Use the following credentials to test the different user roles:
 
 **Example:**
 *   **Admin Dashboard**
-    ![Admin Dashboard](link-to-your-screenshot.png)
+    <img width="1919" height="868" alt="image" src="https://github.com/user-attachments/assets/8c969c92-fb4f-4f1d-8d99-826c0976b4ad" />
+
 *   **Student Portal**
-    ![Student Portal](link-to-your-screenshot.png)
+    <img width="1918" height="861" alt="image" src="https://github.com/user-attachments/assets/d7ce2347-503f-46e0-9558-cf9254de2123" />
+
+*   **Student Portal**
+    <img width="1919" height="855" alt="image" src="https://github.com/user-attachments/assets/5dd262c0-4ca0-4b01-8d04-bd55d83a34ea" />
+    <img width="1919" height="858" alt="image" src="https://github.com/user-attachments/assets/6576e63f-def2-4e07-8f66-e0927a3f5bc5" />
+
 *   **Public Website CMS Editor**
     ![CMS Editor](link-to-your-screenshot.png)
 
@@ -178,23 +184,11 @@ The project is organized into role-based directories for clarity and separation 
 └── README.md             # You are here
 ```
 
----
-
-## 🤝 Contributing
-
-Contributions are welcome! If you have suggestions for improvement or want to add new features, please follow these steps:
-
-1.  **Fork** the repository.
-2.  Create a new branch (`git checkout -b feature/your-feature-name`).
-3.  Make your changes.
-4.  **Commit** your changes (`git commit -m 'Add some amazing feature'`).
-5.  **Push** to the branch (`git push origin feature/your-feature-name`).
-6.  Open a **Pull Request**.
-
-Please open an issue first to discuss what you would like to change.
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+<div align="center">
+  <h3>Connect with me:</h3>
+  <p>
+    <a href="https://github.com/Sanjeev-k-11" target="_blank"><img alt="Github" src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a>
+    <a href="https://www.linkedin.com/in/sanjeevkumaryadav/" target="_blank"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"></a>
+  </p>
+</div>
+   
