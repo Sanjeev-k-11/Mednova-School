@@ -1,0 +1,27 @@
+[08-Sep-2025 19:59:29 Asia/Kolkata] PHP Warning:  Undefined array key "type" in /home/jqopkpgo/skyschool.mednova.store/super_admin/manage_admins.php on line 13
+[08-Sep-2025 19:59:58 Asia/Kolkata] PHP Warning:  Undefined array key "type" in /home/jqopkpgo/skyschool.mednova.store/super_admin/manage_admins.php on line 13
+[08-Sep-2025 20:18:55 Asia/Kolkata] PHP Warning:  Undefined array key "type" in /home/jqopkpgo/skyschool.mednova.store/super_admin/manage_admins.php on line 13
+[08-Sep-2025 20:25:24 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/super_admin/edit_admin.php:158
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/super_admin/edit_admin.php(158): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/super_admin/edit_admin.php on line 158
+[08-Sep-2025 20:26:01 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/super_admin/edit_admin.php:158
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/super_admin/edit_admin.php(158): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/super_admin/edit_admin.php on line 158
+[08-Sep-2025 20:27:36 Asia/Kolkata] PHP Warning:  Undefined array key "resource_type" in /home/jqopkpgo/skyschool.mednova.store/super_admin/create_admin.php on line 46
+[08-Sep-2025 20:27:52 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/super_admin/edit_admin.php:158
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/super_admin/edit_admin.php(158): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/super_admin/edit_admin.php on line 158
+[05-Oct-2025 22:08:53 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to undefined function hasTransportFees() in /home/jqopkpgo/skyschool.mednova.store/super_admin/add_bulk_fees.php:289
+Stack trace:
+#0 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/super_admin/add_bulk_fees.php on line 289
+[05-Oct-2025 22:09:14 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to undefined function hasTransportFees() in /home/jqopkpgo/skyschool.mednova.store/super_admin/add_bulk_fees.php:289
+Stack trace:
+#0 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/super_admin/add_bulk_fees.php on line 289

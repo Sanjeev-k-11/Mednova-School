@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    
+   
+
+    <!-- General Public/Root Pages -->
+    <url>
+        <loc>http://www.yourschoolwebsite.com/index.php</loc>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://www.yourschoolwebsite.com/login.php</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>http://www.yourschoolwebsite.com/forgot-password.php</loc>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>http://www.yourschoolwebsite.com/reset-password.php</loc>
+        <priority>0.1</priority>
+    </url>
+    <url>
+        <loc>http://www.yourschoolwebsite.com/logout.php</loc>
+        <priority>0.1</priority>
+    </url>
+
+    <!-- === Super Admin Pages === -->
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/dashboard.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/myprofile.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/manage_classes.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/manage_subjects.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/manage_exams.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/view_exam_schedule.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/manage_announcements.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/events_calendar.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/manage_events.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/create_student.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/view_students.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/create_staff.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/view_all_staff.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/manage_scholarships.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/assign_scholarship.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/manage_fees.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/assign_student_fees.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/add_bulk_fees.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/create_salary.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/view_staff_salaries.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/manage_income.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/manage_expenses.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/create_van.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/super_admin/view_vans.php</loc></url>
+
+    <!-- === Admin Pages === -->
+    <url><loc>http://www.yourschoolwebsite.com/admin/dashboard.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/myprofile.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_classes.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_subjects.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_exams.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/view_exam_schedule.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_announcements.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/events_calendar.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_events.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/create_student.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/view_students.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/create_staff.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/view_all_staff.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/assign_teachers.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/department_management.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/library_dashboard.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/admin_clubs.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/admin_competitions.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/admin_documents.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/admin_cultural_programs.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_scholarships.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/assign_scholarship.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/upload_achievement.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_fees.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/assign_student_fees.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/add_bulk_fees.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/create_salary.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/view_staff_salaries.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_income.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_expenses.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_periods.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/manage_timetable.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/create_van.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/admin/view_vans.php</loc></url>
+
+    <!-- === Teacher Pages === -->
+    <url><loc>http://www.yourschoolwebsite.com/teacher/dashboard.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_profile.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/student_dashboard.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/indiscipline.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/exam_dashboard.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_classes.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_exams.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_assignments.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_attendance_report.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_upload_marks.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_class_report.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_class_marksheet.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_timetable.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_attendance.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_library.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_notices.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_study_materials.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_leave_management.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_helpdesk.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/chat.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_messages.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/student_forum.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_clubs.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_competitions.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_cultural_programs.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_manage_tests.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_create_test.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/teacher/teacher_settings.php</loc></url>
+
+    <!-- === Student Pages === -->
+    <url><loc>http://www.yourschoolwebsite.com/student/student_dashboard.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_courses.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_assignments.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_exams.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_attendance.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_timetable.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_study_materials.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_tests.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_achievements.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/faculty_directory.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/fee_payment.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/applications.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/id_profile.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/library.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/hostel.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/canteen.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/transport.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_helpdesk.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_notices.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_messages.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/student_forum.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/contact_faculty.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/events.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/sports_clubs.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/cultural_programs.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/competitions.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/my_profile.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/performance.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/documents.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/change_password.php</loc></url>
+    <url><loc>http://www.yourschoolwebsite.com/student/settings.php</loc></url>
+    
+</urlset>

@@ -1,0 +1,20 @@
+[24-Sep-2025 16:55:31 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Too many connections in /home/jqopkpgo/skyschool.mednova.store/database/config.php:28
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/database/config.php(28): mysqli_connect('localhost:3306', 'jqopkpgo_new_sc...', 'Kumar@2004', 'jqopkpgo_new_sc...')
+#1 /home/jqopkpgo/skyschool.mednova.store/user/school_banner.php(6): require_once('/home/jqopkpgo/...')
+#2 /home/jqopkpgo/skyschool.mednova.store/index.php(4): require_once('/home/jqopkpgo/...')
+#3 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/database/config.php on line 28
+[24-Sep-2025 16:55:34 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Too many connections in /home/jqopkpgo/skyschool.mednova.store/database/config.php:28
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/database/config.php(28): mysqli_connect('localhost:3306', 'jqopkpgo_new_sc...', 'Kumar@2004', 'jqopkpgo_new_sc...')
+#1 /home/jqopkpgo/skyschool.mednova.store/login.php(20): require_once('/home/jqopkpgo/...')
+#2 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/database/config.php on line 28
+[08-Nov-2025 22:40:43 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Too many connections in /home/jqopkpgo/skyschool.mednova.store/database/config.php:28
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/database/config.php(28): mysqli_connect('localhost:3306', 'jqopkpgo_new_sc...', 'Kumar@2004', 'jqopkpgo_new_sc...')
+#1 /home/jqopkpgo/skyschool.mednova.store/user/school_banner.php(6): require_once('/home/jqopkpgo/...')
+#2 /home/jqopkpgo/skyschool.mednova.store/index.php(4): require_once('/home/jqopkpgo/...')
+#3 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/database/config.php on line 28

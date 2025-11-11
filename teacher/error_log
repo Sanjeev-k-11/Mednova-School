@@ -1,0 +1,35 @@
+[05-Oct-2025 20:52:09 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php:60
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php(60): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php on line 60
+[09-Oct-2025 11:00:18 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php:60
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php(60): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php on line 60
+[09-Oct-2025 11:03:18 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php:60
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php(60): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php on line 60
+[09-Oct-2025 11:09:19 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php:60
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php(60): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php on line 60
+[09-Oct-2025 11:10:20 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php:60
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php(60): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php on line 60
+[09-Oct-2025 11:12:22 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php:60
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php(60): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php on line 60
+[09-Oct-2025 11:15:23 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php:60
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php(60): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/teacher/api_check_notifications.php on line 60

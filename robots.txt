@@ -1,0 +1,10 @@
+
+
+User-agent: *
+Disallow: /admin/
+Disallow: /student/
+Disallow: /teacher/
+Disallow: /super_admin/
+Disallow: /database/
+ 
+Sitemap: http://www.yourschoolwebsite.com/sitemap.xml

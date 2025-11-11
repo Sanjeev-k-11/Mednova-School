@@ -1,0 +1,106 @@
+[08-Sep-2025 20:30:07 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'd.name' in 'field list' in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php:83
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php(83): mysqli_query(Object(mysqli), 'SELECT d.name A...')
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php on line 83
+[08-Sep-2025 20:30:25 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'd.name' in 'field list' in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php:83
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php(83): mysqli_query(Object(mysqli), 'SELECT d.name A...')
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php on line 83
+[08-Sep-2025 20:33:07 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'd.name' in 'field list' in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php:83
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php(83): mysqli_query(Object(mysqli), 'SELECT d.name A...')
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php on line 83
+[08-Sep-2025 20:39:59 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'd.name' in 'field list' in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php:83
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php(83): mysqli_query(Object(mysqli), 'SELECT d.name A...')
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php on line 83
+[08-Sep-2025 20:40:08 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'd.name' in 'field list' in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php:83
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php(83): mysqli_query(Object(mysqli), 'SELECT d.name A...')
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php on line 83
+[08-Sep-2025 20:41:06 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'd.name' in 'field list' in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php:83
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php(83): mysqli_query(Object(mysqli), 'SELECT d.name A...')
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php on line 83
+[08-Sep-2025 20:44:25 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'd.name' in 'field list' in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php:83
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php(83): mysqli_query(Object(mysqli), 'SELECT d.name A...')
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php on line 83
+[08-Sep-2025 20:49:15 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'd.name' in 'field list' in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php:83
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php(83): mysqli_query(Object(mysqli), 'SELECT d.name A...')
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php on line 83
+[08-Sep-2025 20:54:45 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'd.name' in 'field list' in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php:86
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php(86): mysqli_query(Object(mysqli), 'SELECT d.name A...')
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/hr_management.php on line 86
+[08-Sep-2025 21:03:22 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php:159
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php(159): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php on line 159
+[08-Sep-2025 23:30:06 Asia/Kolkata] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/jqopkpgo/skyschool.mednova.store/admin/edit_staff.php on line 253
+[08-Sep-2025 23:30:06 Asia/Kolkata] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/jqopkpgo/skyschool.mednova.store/admin/edit_staff.php on line 311
+[12-Sep-2025 13:39:27 UTC] PHP Parse error:  syntax error, unexpected identifier "inclusion" in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php on line 1281
+[12-Sep-2025 13:39:55 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php on line 1282
+[12-Sep-2025 13:42:16 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php on line 1283
+[12-Sep-2025 13:44:52 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php on line 1283
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"Modern Science Laboratory","src_url":"https:\/\/via.placeholder.com\/600\/4c51bf\/ffffff?text=Science+Lab","category":"infrastructure","description":"State-of-the-art science lab with latest equipment"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"Library Reading Hall","src_url":"https:\/\/via.placeholder.com\/600\/667eea\/ffffff?text=Library","category":"infrastructure","description":"Spacious library with extensive collection"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"Annual Sports Day","src_url":"https:\/\/via.placeholder.com\/600\/4c51bf\/ffffff?text=Sports+Day","category":"sports","description":"Students participating in athletic events"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"Science Exhibition","src_url":"https:\/\/via.placeholder.com\/600\/667eea\/ffffff?text=Science+Exhibition","category":"academics","description":"Students presenting their science projects"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"video","title":"Cultural Performance","src_url":"https:\/\/www.w3schools.com\/html\/mov_bbb.mp4","category":"events","description":"Annual day cultural program highlights"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"Computer Lab","src_url":"https:\/\/via.placeholder.com\/600\/4c51bf\/ffffff?text=Computer+Lab","category":"infrastructure","description":"Modern computer lab with latest technology"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"Art & Craft Workshop","src_url":"https:\/\/via.placeholder.com\/600\/667eea\/ffffff?text=Art+Workshop","category":"activities","description":"Students engaged in creative arts"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"Basketball Championship","src_url":"https:\/\/via.placeholder.com\/600\/4c51bf\/ffffff?text=Basketball","category":"sports","description":"Inter-house basketball tournament"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"Mathematics Competition","src_url":"https:\/\/via.placeholder.com\/600\/667eea\/ffffff?text=Maths+Comp","category":"academics","description":"Mental math competition winners"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"video","title":"Music Concert","src_url":"https:\/\/www.w3schools.com\/html\/mov_bbb.mp4","category":"events","description":"Spring music concert performance"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"School Auditorium","src_url":"https:\/\/via.placeholder.com\/600\/4c51bf\/ffffff?text=Auditorium","category":"infrastructure","description":"Multi-purpose auditorium for events"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Gallery item found with missing or empty ID in display, skipping: {"type":"image","title":"Robotics Club","src_url":"https:\/\/via.placeholder.com\/600\/667eea\/ffffff?text=Robotics+Club","category":"activities","description":"Students working on robotics projects"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Infra highlight found with missing or empty ID in display, skipping: {"icon":"<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20\"\/><polyline points=\"10 2 10 22\"\/><\/svg>","count":"40+","title":"Smart Classrooms"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Infra highlight found with missing or empty ID in display, skipping: {"icon":"<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z\"\/><circle cx=\"12\" cy=\"13\" r=\"3\"\/><\/svg>","count":"6","title":"Science Labs"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Infra highlight found with missing or empty ID in display, skipping: {"icon":"<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18.36 17.64L12 12l6.36-6.36A9 9 0 0 1 21 12h-3\"\/><path d=\"M11.95 21l-.03-2.92a2 2 0 0 1-2-2v-1.12a2 2 0 0 1 2-2h1.1a2 2 0 0 1 2 2V19l.03 2\"\/><path d=\"M3.64 17.64A9 9 0 0 1 3 12h3\"\/><path d=\"M12 3v9\"\/><\/svg>","count":"15+","title":"Sports Facilities"}
+[12-Sep-2025 19:23:14 Asia/Kolkata] Infra highlight found with missing or empty ID in display, skipping: {"icon":"<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2\"\/><rect width=\"18\" height=\"18\" x=\"3\" y=\"2\" rx=\"2\" ry=\"2\"\/><circle cx=\"12\" cy=\"7\" r=\"4\"\/><line x1=\"12\" x2=\"12\" y1=\"2\" y2=\"2\"\/><\/svg>","count":"10+","title":"Activity Rooms"}
+[12-Sep-2025 19:54:11 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to undefined function deleteFromCloudinary() in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php:337
+Stack trace:
+#0 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php on line 337
+[12-Sep-2025 19:55:41 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to undefined function deleteFromCloudinary() in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php:353
+Stack trace:
+#0 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php on line 353
+[12-Sep-2025 19:56:58 Asia/Kolkata] PHP Warning:  Undefined array key "type" in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php on line 208
+[12-Sep-2025 19:57:06 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to undefined function deleteFromCloudinary() in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php:337
+Stack trace:
+#0 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/gallery_settings.php on line 337
+[12-Sep-2025 19:57:43 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php:159
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php(159): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php on line 159
+[12-Sep-2025 19:58:09 Asia/Kolkata] PHP Fatal error:  Uncaught mysqli_sql_exception: Prepared statement needs to be re-prepared in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php:159
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php(159): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php on line 159
+[12-Sep-2025 20:01:12 Asia/Kolkata] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php:171
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php(171): mysqli_stmt_bind_param(Object(mysqli_stmt), 'sssssssssssssis...', 'ss', 'sss', '', '', '', '', '', '', '', '$2y$10$UQjOZkgp...', '852852', 'https://res.clo...', 1, '5', '', '', '0', '7418529635', '', '', '', 'Active', '', '', 0, NULL, 1)
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php on line 171
+[12-Sep-2025 20:03:16 Asia/Kolkata] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php:181
+Stack trace:
+#0 /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php(181): mysqli_stmt_bind_param(Object(mysqli_stmt), 'sssssssssssssis...', 'ss', 'sss', '', '', '', '', '', '', '', '$2y$10$UQjOZkgp...', '852852', 'https://placeho...', 1, '5', 'Male', '', '0', '7418529635', '', '', '', 'Active', 'A-', '', 0, NULL, 1)
+#1 {main}
+  thrown in /home/jqopkpgo/skyschool.mednova.store/admin/edit_student.php on line 181
+[05-Oct-2025 20:50:47 Asia/Kolkata] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/jqopkpgo/skyschool.mednova.store/admin/admin_marksheet_report.php on line 696

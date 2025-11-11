@@ -1,0 +1,2012 @@
+CREATE TABLE super_admin (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    full_name VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL DEFAULT 'Super Admin',
+    super_admin_id VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    address TEXT,
+    image_url VARCHAR(255),
+    gender VARCHAR(10),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,        -- Auto-increment unique ID
+    admin_id VARCHAR(50) NOT NULL UNIQUE,     -- Unique Admin ID
+    username VARCHAR(100) NOT NULL,           -- Short name/username
+    full_name VARCHAR(150) NOT NULL,          -- Full Name
+    password VARCHAR(255) NOT NULL,           -- Hashed password
+    email VARCHAR(150) NOT NULL UNIQUE,       -- Email
+    phone_number VARCHAR(20),                 -- Phone number
+    address VARCHAR(255),                     -- Address
+    gender ENUM('Male','Female','Other'),     -- Gender
+    role VARCHAR(100),                        -- Role/Position
+    salary DECIMAL(10,2),                     -- Salary
+    qualification VARCHAR(150),               -- Educational Qualification
+    join_date DATE,                           -- Joining date
+    dob DATE,                                 -- Date of Birth
+    image_url VARCHAR(255),                   -- Profile Image Path
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,   -- When added
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Last update
+);
+CREATE TABLE principles (
+    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    principle_code VARCHAR(100) NOT NULL UNIQUE,
+    full_name VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20),
+    address TEXT,
+    pincode VARCHAR(10),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL, -- Stores hashed password
+    image_url VARCHAR(512) DEFAULT NULL, -- For Cloudinary or other image URLs
+    salary DECIMAL(10, 2) DEFAULT NULL, -- Principle's defined salary
+    qualification VARCHAR(255) DEFAULT NULL,
+    gender ENUM('Male', 'Female', 'Other') DEFAULT NULL,
+    blood_group VARCHAR(5) DEFAULT NULL,
+    dob DATE DEFAULT NULL, -- Date of Birth
+    years_of_experience INT(11) DEFAULT 0,
+    date_of_joining DATE DEFAULT NULL,
+    van_service_taken TINYINT(1) DEFAULT 0, -- 0 for No, 1 for Yes
+    van_id INT(11) DEFAULT NULL, -- Foreign key to vans table if van_service_taken is 1
+    is_blocked TINYINT(1) DEFAULT 0, -- 0 for Active, 1 for Blocked (used in view_all_staff)
+    created_by_admin_id INT(11) NOT NULL, -- Foreign key to the super admin who created this record
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    -- Foreign Key Constraints
+    FOREIGN KEY (van_id) REFERENCES vans(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    -- Corrected table name from 'super_admins' (plural) to 'super_admin' (singular)
+    FOREIGN KEY (created_by_admin_id) REFERENCES super_admin(id) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- Optional: Add indexes for frequently queried columns to improve performance
+CREATE INDEX idx_principle_code ON principles (principle_code);
+CREATE INDEX idx_principle_email ON principles (email);
+CREATE INDEX idx_principle_full_name ON principles (full_name);
+CREATE INDEX idx_principle_status ON principles (is_blocked);
+
+
+CREATE TABLE `vans` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `van_number` VARCHAR(50) NOT NULL UNIQUE,
+  `route_details` VARCHAR(255) NULL,
+  `status` ENUM('Active', 'Inactive', 'Maintenance') NOT NULL DEFAULT 'Active'
+);
+
+-- Insert some sample data so the dropdown has options
+INSERT INTO `vans` (van_number, route_details, status) VALUES
+('VAN-001', 'City Center Route', 'Active'),
+('VAN-002', 'North Suburbs Route', 'Active'),
+('VAN-003', 'Westside Express', 'Maintenance');
+
+
+ALTER TABLE `principles`
+ADD COLUMN `van_service_taken` BOOLEAN NOT NULL DEFAULT FALSE,
+ADD COLUMN `van_id` INT NULL DEFAULT NULL;
+
+ALTER TABLE `teachers`
+ADD COLUMN `van_service_taken` BOOLEAN NOT NULL DEFAULT FALSE,
+ADD COLUMN `van_id` INT NULL DEFAULT NULL;
+
+
+ALTER TABLE `vans`
+ADD COLUMN `driver_name` VARCHAR(255) NULL DEFAULT NULL AFTER `route_details`,
+ADD COLUMN `khalasi_name` VARCHAR(255) NULL DEFAULT NULL AFTER `driver_name`;
+
+
+CREATE TABLE `classes` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `class_name` VARCHAR(50) NOT NULL,
+  `section_name` VARCHAR(50) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `unique_class_section` (`class_name`, `section_name`)
+);
+
+
+CREATE TABLE `students` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `registration_number` VARCHAR(10) NOT NULL UNIQUE,
+  `first_name` VARCHAR(100) NOT NULL,
+  `middle_name` VARCHAR(100) NULL,
+  `last_name` VARCHAR(100) NOT NULL,
+  `dob` DATE NULL,
+  `gender` ENUM('Male', 'Female', 'Other') NULL,
+  `blood_group` VARCHAR(10) NULL,
+  `image_url` VARCHAR(255) NULL,
+  `phone_number` VARCHAR(20) NULL,
+  `email` VARCHAR(100) NULL UNIQUE,
+  `address` TEXT NULL,
+  `pincode` VARCHAR(10) NULL,
+  `district` VARCHAR(100) NULL,
+  `state` VARCHAR(100) NULL,
+  `father_name` VARCHAR(255) NULL,
+  `mother_name` VARCHAR(255) NULL,
+  `parent_phone_number` VARCHAR(20) NULL,
+  `father_occupation` VARCHAR(255) NULL,
+  `class_id` INT NOT NULL,
+  `roll_number` VARCHAR(20) NULL,
+  `previous_school` VARCHAR(255) NULL,
+  `previous_class` VARCHAR(100) NULL,
+  `admission_date` DATE NOT NULL,
+  `van_service_taken` BOOLEAN NOT NULL DEFAULT FALSE,
+  `van_id` INT NULL DEFAULT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `status` ENUM('Active', 'Blocked') NOT NULL DEFAULT 'Active',
+  `created_by_admin_id` INT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE `students`
+ADD COLUMN `unblock_reason` TEXT NULL AFTER `status`,
+ADD COLUMN `unblocked_by_admin_id` INT NULL AFTER `unblock_reason`,
+ADD COLUMN `unblocked_at` TIMESTAMP NULL AFTER `unblocked_by_admin_id`;
+
+
+ALTER TABLE `students`
+ADD COLUMN `block_reason` TEXT NULL AFTER `status`,
+ADD COLUMN `blocked_by_admin_id` INT NULL AFTER `block_reason`,
+ADD COLUMN `blocked_at` TIMESTAMP NULL AFTER `blocked_by_admin_id`;
+
+
+
+CREATE TABLE `fee_types` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `fee_type_name` VARCHAR(255) NOT NULL UNIQUE,
+  `description` TEXT NULL
+);
+
+
+CREATE TABLE `class_fees` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `class_id` INT NOT NULL,
+  `fee_type_id` INT NOT NULL,
+  `amount` DECIMAL(10, 2) NOT NULL,
+  `frequency` ENUM('Monthly', 'Quarterly', 'Half-Yearly', 'Annually', 'One-Time') NOT NULL DEFAULT 'Monthly',
+  UNIQUE KEY `unique_class_fee` (`class_id`, `fee_type_id`)
+);
+
+ALTER TABLE `vans` ADD COLUMN `fee_amount` DECIMAL(10, 2) NULL DEFAULT 0.00;
+
+
+CREATE TABLE `student_fees` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `student_id` INT NOT NULL,
+  `fee_type_name` VARCHAR(255) NOT NULL, -- e.g., 'Tuition Fee', 'Transport Fee'
+  `due_date` DATE NOT NULL,
+  `amount_due` DECIMAL(10, 2) NOT NULL,
+  `amount_paid` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+  `status` ENUM('Unpaid', 'Paid', 'Partially Paid', 'Waived') NOT NULL DEFAULT 'Unpaid',
+  `assigned_by_admin_id` INT NOT NULL,
+  `assigned_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `paid_at` DATETIME NULL,
+  `notes` TEXT NULL,
+  INDEX `student_id_index` (`student_id`),
+  INDEX `due_date_index` (`due_date`)
+);
+
+
+
+CREATE TABLE `staff_salary` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `staff_id` INT NOT NULL,
+  `staff_role` VARCHAR(50) NOT NULL COMMENT 'e.g., Principal, Teacher',
+  `salary_month` VARCHAR(20) NOT NULL,
+  `salary_year` INT NOT NULL,
+  `base_salary` DECIMAL(10, 2) NOT NULL,
+  `deductions` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+  `bonuses` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+  `net_payable` DECIMAL(10, 2) NOT NULL,
+  `status` ENUM('Generated', 'Paid') NOT NULL DEFAULT 'Generated',
+  `paid_at` DATETIME NULL,
+  `notes` TEXT NULL,
+  `generated_by_admin_id` INT NOT NULL,
+  `generated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `unique_salary_record` (`staff_id`, `staff_role`, `salary_month`, `salary_year`)
+);
+
+
+CREATE TABLE `subjects` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `subject_name` VARCHAR(255) NOT NULL UNIQUE,
+  `subject_code` VARCHAR(50) NULL UNIQUE
+);
+
+
+CREATE TABLE `class_subjects` (
+  `class_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  PRIMARY KEY (`class_id`, `subject_id`)
+);
+
+
+CREATE TABLE `exam_types` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `exam_name` VARCHAR(255) NOT NULL UNIQUE,
+  `description` TEXT NULL
+);
+
+
+CREATE TABLE `exam_schedule` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `exam_type_id` INT NOT NULL,
+  `class_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  `exam_date` DATE NOT NULL,
+  `start_time` TIME NOT NULL,
+  `end_time` TIME NOT NULL,
+  `max_marks` INT NOT NULL,
+  `passing_marks` INT NOT NULL,
+  UNIQUE KEY `unique_exam_entry` (`exam_type_id`, `class_id`, `subject_id`)
+);
+
+
+CREATE TABLE `announcements` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `content` TEXT NOT NULL,
+  `posted_by` VARCHAR(255) NOT NULL, -- e.g., "Principal's Office"
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `is_active` BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+-- Optional: Insert a sample announcement
+INSERT INTO `announcements` (`title`, `content`, `posted_by`) VALUES
+('Mid-Term Exam Schedule Published', 'The schedule for the upcoming Mid-Term examinations has been published. Please check the "View Exam Schedule" page for details.', 'Principal\'s Office'),
+('Annual Sports Day', 'The Annual Sports Day will be held on the 15th of next month. All students are requested to participate.', 'Admin');
+
+
+CREATE TABLE `events` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NULL,
+  `start_date` DATETIME NOT NULL,
+  `end_date` DATETIME NULL,
+  `event_type` ENUM('Holiday', 'Exam', 'School Event', 'Meeting', 'Other') NOT NULL DEFAULT 'School Event',
+  `color` VARCHAR(7) NULL COMMENT 'Hex color code for the event',
+  `created_by_admin_id` INT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Optional: Insert a sample event
+INSERT INTO `events` (`title`, `description`, `start_date`, `end_date`, `event_type`, `color`, `created_by_admin_id`) VALUES
+('Annual Sports Day', 'All students are invited to participate in the Annual Sports Day. Events include track and field, team sports, and more.', '2023-12-15 09:00:00', '2023-12-15 16:00:00', 'School Event', '#28a745', 1),
+('Winter Vacation', 'The school will be closed for the winter vacation.', '2023-12-22 00:00:00', '2024-01-02 23:59:59', 'Holiday', '#dc3545', 1);
+
+
+CREATE TABLE `student_scholarships` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `student_id` INT NOT NULL,
+  `scholarship_id` INT NOT NULL,
+  `assigned_date` DATE NOT NULL,
+  `notes` TEXT NULL,
+  `assigned_by_admin_id` INT NOT NULL,
+  UNIQUE KEY `unique_student_scholarship` (`student_id`, `scholarship_id`)
+);
+
+CREATE TABLE `scholarships` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `scholarship_name` VARCHAR(255) NOT NULL UNIQUE,
+  `description` TEXT NULL,
+  `type` ENUM('Fixed', 'Percentage') NOT NULL DEFAULT 'Fixed',
+  `value` DECIMAL(10, 2) NOT NULL COMMENT 'The amount if Fixed, or the percentage (e.g., 25.00) if Percentage',
+  `is_active` BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+
+-- For Income
+CREATE TABLE `income` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `source` VARCHAR(255) NOT NULL,
+  `amount` DECIMAL(10, 2) NOT NULL,
+  `income_date` DATE NOT NULL,
+  `description` TEXT,
+  `added_by_admin_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- For Expenses
+CREATE TABLE `expenses` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `category` VARCHAR(255) NOT NULL,
+  `amount` DECIMAL(10, 2) NOT NULL,
+  `expense_date` DATE NOT NULL,
+  `description` TEXT,
+  `added_by_admin_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE teachers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  teacher_code VARCHAR(50) NOT NULL UNIQUE,
+  full_name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL COMMENT 'Stores hashed password',
+  phone_number VARCHAR(20) DEFAULT NULL,
+  address TEXT DEFAULT NULL,
+  pincode VARCHAR(10) DEFAULT NULL,
+  image_url VARCHAR(255) DEFAULT NULL,
+  salary DECIMAL(10, 2) DEFAULT NULL,
+  qualification VARCHAR(100) DEFAULT NULL,
+  subject_taught VARCHAR(100) NOT NULL,
+  years_of_experience INT DEFAULT 0,
+  gender ENUM('Male', 'Female', 'Other') DEFAULT NULL,
+  blood_group VARCHAR(5) DEFAULT NULL,
+  dob DATE DEFAULT NULL COMMENT 'Date of Birth',
+  date_of_joining DATE DEFAULT NULL,
+  van_service_taken TINYINT(1) NOT NULL DEFAULT 0 COMMENT '0 = No, 1 = Yes',
+  van_id INT DEFAULT NULL,
+  created_by_admin_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+              ON UPDATE CURRENT_TIMESTAMP,
+
+  -- Foreign Key Constraints
+  CONSTRAINT fk_teacher_van FOREIGN KEY (van_id) 
+      REFERENCES vans(id) 
+      ON DELETE SET NULL ON UPDATE CASCADE,
+
+  CONSTRAINT fk_teacher_creator FOREIGN KEY (created_by_admin_id) 
+      REFERENCES super_admin(id) 
+      ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `password_resets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `user_role` varchar(50) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+
+
+-- =================================================================
+-- Table 1: Defines the school's daily periods/time slots.
+-- This allows for flexible scheduling (e.g., adding a "zero period"
+-- or changing break times) without altering the main timetable structure.
+-- =================================================================
+CREATE TABLE `class_periods` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `period_name` VARCHAR(100) NOT NULL COMMENT 'e.g., 1st Period, Lunch Break',
+  `start_time` TIME NOT NULL,
+  `end_time` TIME NOT NULL,
+  UNIQUE KEY `unique_period_times` (`start_time`, `end_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Let's add some sample data to get you started.
+INSERT INTO `class_periods` (`period_name`, `start_time`, `end_time`) VALUES
+('1st Period', '09:00:00', '09:45:00'),
+('2nd Period', '09:45:00', '10:30:00'),
+('3rd Period', '10:30:00', '11:15:00'),
+('Short Break', '11:15:00', '11:30:00'),
+('4th Period', '11:30:00', '12:15:00'),
+('5th Period', '12:15:00', '13:00:00'),
+('Lunch Break', '13:00:00', '13:45:00'),
+('6th Period', '13:45:00', '14:30:00'),
+('7th Period', '14:30:00', '15:15:00');
+
+
+-- =================================================================
+-- Table 2: The main timetable structure.
+-- Each row links a class, subject, and teacher to a specific
+-- day of the week and a specific period from the `class_periods` table.
+-- =================================================================
+CREATE TABLE `class_timetable` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `class_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  `teacher_id` INT NOT NULL,
+  `day_of_week` ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday') NOT NULL,
+  `period_id` INT NOT NULL,
+  `created_by_admin_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  -- Foreign Key constraints to ensure data integrity
+  CONSTRAINT `fk_timetable_class` FOREIGN KEY (`class_id`) 
+      REFERENCES `classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  
+  CONSTRAINT `fk_timetable_subject` FOREIGN KEY (`subject_id`) 
+      REFERENCES `subjects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+      
+  CONSTRAINT `fk_timetable_teacher` FOREIGN KEY (`teacher_id`) 
+      REFERENCES `teachers`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+
+  CONSTRAINT `fk_timetable_period` FOREIGN KEY (`period_id`) 
+      REFERENCES `class_periods`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+
+  CONSTRAINT `fk_timetable_admin` FOREIGN KEY (`created_by_admin_id`) 
+      REFERENCES `admins`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+
+  -- Unique key to prevent scheduling two different subjects for the same class at the same time.
+  UNIQUE KEY `unique_class_slot` (`class_id`, `day_of_week`, `period_id`),
+
+  -- Unique key to prevent assigning a teacher to two different classes at the same time.
+  UNIQUE KEY `unique_teacher_slot` (`teacher_id`, `day_of_week`, `period_id`)
+  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `attendance` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `student_id` INT NOT NULL,
+  `class_id` INT NOT NULL COMMENT 'Denormalized for faster queries',
+  `attendance_date` DATE NOT NULL,
+  `status` ENUM('Present', 'Absent', 'Late', 'Half Day') NOT NULL,
+  `remarks` VARCHAR(255) NULL,
+  `marked_by_admin_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  -- Foreign Keys for data integrity
+  CONSTRAINT fk_attendance_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+  CONSTRAINT fk_attendance_class FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
+  CONSTRAINT fk_attendance_admin FOREIGN KEY (marked_by_admin_id) REFERENCES admins(id) ON DELETE RESTRICT,
+
+  -- CRITICAL: Prevents duplicate attendance records for the same student on the same day
+  UNIQUE KEY `unique_student_attendance_per_day` (`student_id`, `attendance_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+
+ALTER TABLE `classes`
+ADD COLUMN `teacher_id` INT NULL DEFAULT NULL,
+ADD CONSTRAINT `fk_class_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+
+CREATE TABLE `class_subject_teacher` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `class_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  `teacher_id` INT NOT NULL,
+  `assigned_by_admin_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT `fk_cst_class` FOREIGN KEY (`class_id`) REFERENCES `classes`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cst_subject` FOREIGN KEY (`subject_id`) REFERENCES `subjects`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cst_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cst_admin` FOREIGN KEY (`assigned_by_admin_id`) REFERENCES `admins`(`id`) ON DELETE RESTRICT,
+
+  -- This ensures only ONE teacher can be assigned to a specific subject in a specific class
+  UNIQUE KEY `unique_class_subject_assignment` (`class_id`, `subject_id`)
+);
+
+
+
+CREATE TABLE `exam_marks` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `exam_schedule_id` INT NOT NULL,
+  `student_id` INT NOT NULL,
+  `marks_obtained` DECIMAL(5, 2) NOT NULL,
+  `uploaded_by_teacher_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  CONSTRAINT `fk_marks_schedule` FOREIGN KEY (`exam_schedule_id`) REFERENCES `exam_schedule`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_marks_student` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_marks_teacher` FOREIGN KEY (`uploaded_by_teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE,
+  
+  -- This prevents duplicate marks for the same student in the same exam
+  UNIQUE KEY `unique_student_exam` (`exam_schedule_id`, `student_id`)
+);
+
+
+CREATE TABLE `assignments` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NULL,
+  `class_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  `teacher_id` INT NOT NULL,
+  `due_date` DATE NULL,
+  `file_url` VARCHAR(255) NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  CONSTRAINT `fk_assignment_class` FOREIGN KEY (`class_id`) REFERENCES `classes`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_assignment_subject` FOREIGN KEY (`subject_id`) REFERENCES `subjects`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_assignment_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE
+);
+
+
+
+
+CREATE TABLE `notices` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `teacher_id` INT NOT NULL,
+  `class_id` INT NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `content` TEXT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_notice_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_notice_class` FOREIGN KEY (`class_id`) REFERENCES `classes`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `notices`
+ADD COLUMN `posted_by_name` VARCHAR(255) NOT NULL AFTER `content`;
+
+
+CREATE TABLE `study_materials` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `teacher_id` INT NOT NULL,
+  `class_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NULL,
+  `file_name` VARCHAR(255) NOT NULL COMMENT 'Original user-friendly file name',
+  `file_path` VARCHAR(255) NOT NULL COMMENT 'Path on the server with unique name',
+  `file_type` VARCHAR(100) NULL,
+  `file_size` INT NULL COMMENT 'Size in bytes',
+  `uploaded_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_sm_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_sm_class` FOREIGN KEY (`class_id`) REFERENCES `classes`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_sm_subject` FOREIGN KEY (`subject_id`) REFERENCES `subjects`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `study_materials`
+  ADD COLUMN `file_url` TEXT NULL AFTER `description`,
+  ADD COLUMN `public_id` VARCHAR(255) NULL AFTER `file_url`,
+  ADD COLUMN `resource_type` VARCHAR(50) DEFAULT 'raw' AFTER `public_id`,
+  DROP COLUMN `file_path`;
+
+
+  -- Table to store the main details of each test
+CREATE TABLE `online_tests` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `teacher_id` INT NOT NULL,
+  `class_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NULL,
+  `time_limit_minutes` INT NOT NULL COMMENT 'Time limit in minutes',
+  `status` ENUM('Draft', 'Published') NOT NULL DEFAULT 'Published',
+  `created_by` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_ot_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_ot_class` FOREIGN KEY (`class_id`) REFERENCES `classes`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_ot_subject` FOREIGN KEY (`subject_id`) REFERENCES `subjects`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table to store the questions for each test
+CREATE TABLE `online_test_questions` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `test_id` INT NOT NULL,
+  `question_text` TEXT NOT NULL,
+  `option_a` VARCHAR(255) NOT NULL,
+  `option_b` VARCHAR(255) NOT NULL,
+  `option_c` VARCHAR(255) NOT NULL,
+  `option_d` VARCHAR(255) NOT NULL,
+  `correct_option` ENUM('A', 'B', 'C', 'D') NOT NULL,
+  `marks` INT NOT NULL DEFAULT 1,
+  CONSTRAINT `fk_otq_test` FOREIGN KEY (`test_id`) REFERENCES `online_tests`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table to store a student's attempt at a test
+CREATE TABLE `student_test_attempts` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `test_id` INT NOT NULL,
+  `student_id` INT NOT NULL,
+  `start_time` DATETIME NOT NULL,
+  `end_time` DATETIME NULL,
+  `score` INT NULL,
+  `total_marks` INT NOT NULL,
+  `status` ENUM('In Progress', 'Completed') NOT NULL,
+  CONSTRAINT `fk_sta_test` FOREIGN KEY (`test_id`) REFERENCES `online_tests`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_sta_student` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_student_test` (`test_id`, `student_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Main table for support tickets
+CREATE TABLE `support_tickets` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `student_id` INT NOT NULL,
+  `class_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  `teacher_id` INT NOT NULL COMMENT 'ID of the teacher assigned to this subject/class',
+  `title` VARCHAR(255) NOT NULL,
+  `status` ENUM('Open', 'Closed') NOT NULL DEFAULT 'Open',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_st_student` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_st_class` FOREIGN KEY (`class_id`) REFERENCES `classes`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_st_subject` FOREIGN KEY (`subject_id`) REFERENCES `subjects`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_st_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table for the conversation messages within each ticket
+CREATE TABLE `support_ticket_messages` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `ticket_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `user_role` ENUM('Student', 'Teacher') NOT NULL,
+  `message` TEXT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_stm_ticket` FOREIGN KEY (`ticket_id`) REFERENCES `support_tickets`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE `leave_applications` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `student_id` INT NOT NULL,
+  `class_id` INT NOT NULL,
+  `class_teacher_id` INT NOT NULL,
+  `leave_from` DATE NOT NULL,
+  `leave_to` DATE NOT NULL,
+  `reason` TEXT NOT NULL,
+  `status` ENUM('Pending', 'Approved', 'Rejected') NOT NULL DEFAULT 'Pending',
+  `reviewed_by` VARCHAR(255) NULL,
+  `reviewed_at` DATETIME NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_la_student` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_la_class` FOREIGN KEY (`class_id`) REFERENCES `classes`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_la_teacher` FOREIGN KEY (`class_teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- =================================================================
+-- STEP 1: DROP OLD INCOMPATIBLE TABLES (Safety First)
+-- Warning: This will delete all existing chat messages and conversations.
+-- =================================================================
+DROP TABLE IF EXISTS `message_read_status`, `push_subscriptions`, `messages`, `conversation_members`, `conversations`;
+
+
+-- =================================================================
+-- STEP 2: CREATE THE NEW, ROBUST CHAT SCHEMA
+-- =================================================================
+
+--
+-- Table 1: `conversations`
+-- Stores the metadata for every chat "room", whether it's a group or one-on-one.
+--
+CREATE TABLE `conversations` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `type` ENUM('one-on-one', 'group') NOT NULL DEFAULT 'one-on-one',
+  `group_name` VARCHAR(255) NULL COMMENT 'Only used if type is "group"',
+  `group_avatar_url` VARCHAR(255) NULL COMMENT 'Cloudinary URL for the group''s photo',
+  `created_by` INT NULL COMMENT 'Teacher ID of the group creator/admin',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_message_at` TIMESTAMP NULL DEFAULT NULL COMMENT 'For sorting conversations efficiently'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+--
+-- Table 2: `conversation_members`
+-- This is a crucial junction table that links teachers to conversations.
+--
+CREATE TABLE `conversation_members` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `conversation_id` INT NOT NULL,
+  `teacher_id` INT NOT NULL,
+  `joined_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_cm_conversation` FOREIGN KEY (`conversation_id`) REFERENCES `conversations`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cm_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_member_in_conversation` (`conversation_id`, `teacher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+--
+-- Table 3: `messages`
+-- Stores every single message sent in any conversation.
+--
+CREATE TABLE `messages` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `conversation_id` INT NOT NULL,
+  `sender_id` INT NOT NULL,
+  `message_text` TEXT NULL,
+  `image_url` VARCHAR(255) NULL COMMENT 'Cloudinary URL for an image',
+  `public_id` VARCHAR(255) NULL COMMENT 'Cloudinary Public ID for deleting the image',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_msg_conversation` FOREIGN KEY (`conversation_id`) REFERENCES `conversations`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_msg_sender` FOREIGN KEY (`sender_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+--
+-- Table 4: `message_read_status`
+-- Tracks exactly who has read which message. Essential for "unread" counts.
+--
+CREATE TABLE `message_read_status` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `message_id` INT NOT NULL,
+  `conversation_id` INT NOT NULL COMMENT 'Denormalized for faster queries',
+  `reader_id` INT NOT NULL,
+  `read_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_mrs_message` FOREIGN KEY (`message_id`) REFERENCES `messages`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_mrs_conversation` FOREIGN KEY (`conversation_id`) REFERENCES `conversations`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_mrs_reader` FOREIGN KEY (`reader_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_reader_for_message` (`message_id`, `reader_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+--
+-- Table 5: `push_subscriptions`
+-- Stores the browser push notification endpoints for each teacher.
+--
+CREATE TABLE `push_subscriptions` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `teacher_id` INT NOT NULL UNIQUE,
+  `endpoint` TEXT NOT NULL,
+  `public_key` VARCHAR(255) NOT NULL,
+  `auth_token` VARCHAR(255) NOT NULL,
+  `content_encoding` VARCHAR(255) NOT NULL DEFAULT 'aesgcm',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_ps_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+--
+-- Add `last_seen` column to teachers table for online status
+-- The `IF NOT EXISTS` clause prevents errors if you've run this before.
+--
+ALTER TABLE `teachers` ADD COLUMN IF NOT EXISTS `last_seen` TIMESTAMP NULL DEFAULT NULL AFTER `image_url`;
+
+
+-- =================================================================
+-- STEP 3: AUTOMATICALLY CREATE THE "ALL STAFF" GROUP
+-- This part creates the group and adds all current staff to it.
+-- =================================================================
+
+-- Start a transaction to ensure all steps succeed or fail together
+START TRANSACTION;
+
+-- Create the "All Staff" group conversation
+INSERT INTO `conversations` (`type`, `group_name`, `created_by`) 
+VALUES ('group', 'All Staff', NULL); -- NULL created_by signifies a system group
+
+-- Get the ID of the group we just created
+SET @AllStaffConversationID = LAST_INSERT_ID();
+
+-- Add all existing teachers to the "All Staff" group
+INSERT INTO `conversation_members` (conversation_id, teacher_id)
+SELECT @AllStaffConversationID, id FROM `teachers`;
+
+-- IMPORTANT ASSUMPTION:
+-- For the principal to be in the chat, they MUST have an entry in the `teachers` table.
+-- If your principal is only in a separate `principles` table, you need to add them
+-- to the `teachers` table to participate in the chat system.
+-- Example: INSERT INTO `teachers` (full_name, email, ...) SELECT full_name, email, ... FROM `principles` WHERE ...
+
+-- Commit the transaction
+COMMIT;
+
+-- =================================================================
+-- END OF SCRIPT
+-- =================================================================
+
+ALTER TABLE messages
+ADD COLUMN receiver_id INT(11) NOT NULL AFTER sender_id;
+
+
+-- First, ensure the ALTER TABLE statements from the provided schema run successfully,
+-- especially those related to teachers and admins, as they are referenced.
+-- (This is just a comment to remind you; the previous ALTER TABLEs are already in your input.)
+
+
+-- CREATE TABLE indiscipline_reports
+CREATE TABLE `indiscipline_reports` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `reported_by_teacher_id` INT NOT NULL COMMENT 'ID of the teacher making the report',
+  
+  `target_type` ENUM('Student', 'Teacher') NOT NULL COMMENT 'Specifies if the report is against a student or another teacher',
+  `reported_student_id` INT NULL COMMENT 'ID of the student involved, if target_type is "Student"',
+  `reported_teacher_id` INT NULL COMMENT 'ID of the teacher involved (not the reporter), if target_type is "Teacher"',
+  
+  `class_id` INT NULL COMMENT 'Relevant class if the incident is student-related or happened in a specific class context',
+  `subject_id` INT NULL COMMENT 'Relevant subject if the incident is student-related or happened in a specific subject context',
+
+  `incident_date` DATE NOT NULL COMMENT 'Date when the indiscipline incident occurred',
+  `incident_time` TIME NULL COMMENT 'Approximate time when the indiscipline incident occurred',
+  `location` VARCHAR(255) NULL COMMENT 'Where the incident occurred (e.g., "Classroom 101", "Playground")',
+  `description` TEXT NOT NULL COMMENT 'Detailed description of the indiscipline incident',
+  `evidence_url` VARCHAR(255) NULL COMMENT 'URL to any uploaded evidence (e.g., image, video)',
+  
+  `severity` ENUM('Minor', 'Moderate', 'Serious', 'Critical') NOT NULL DEFAULT 'Minor' COMMENT 'Severity of the indiscipline',
+  `immediate_action_taken` TEXT NULL COMMENT 'Action taken by the reporting teacher at the time of the incident',
+  
+  `status` ENUM('Pending Review', 'Reviewed - Warning Issued', 'Reviewed - Further Action', 'Reviewed - No Action', 'Closed') NOT NULL DEFAULT 'Pending Review' COMMENT 'Current status of the report',
+  
+  `reviewed_by_admin_id` INT NULL COMMENT 'ID of the admin/principal who reviewed the report',
+  `review_date` DATETIME NULL COMMENT 'Date and time of the review',
+  `review_notes` TEXT NULL COMMENT 'Notes from the reviewer',
+  `final_action_taken` TEXT NULL COMMENT 'Final action decided by the reviewer (e.g., "Suspension for 3 days", "Formal warning")',
+  
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  -- Foreign Key Constraints
+  CONSTRAINT `fk_indiscipline_reporter` FOREIGN KEY (`reported_by_teacher_id`) 
+      REFERENCES `teachers`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE, -- Reporter cannot be deleted if reports exist
+      
+  CONSTRAINT `fk_indiscipline_reported_student` FOREIGN KEY (`reported_student_id`) 
+      REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE, -- If student is deleted, their reports are too
+      
+  CONSTRAINT `fk_indiscipline_reported_teacher` FOREIGN KEY (`reported_teacher_id`) 
+      REFERENCES `teachers`(`id`) ON DELETE SET NULL ON UPDATE CASCADE, -- If reported teacher is deleted, set to NULL
+      
+  CONSTRAINT `fk_indiscipline_class` FOREIGN KEY (`class_id`) 
+      REFERENCES `classes`(`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+      
+  CONSTRAINT `fk_indiscipline_subject` FOREIGN KEY (`subject_id`) 
+      REFERENCES `subjects`(`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+      
+  CONSTRAINT `fk_indiscipline_reviewer_admin` FOREIGN KEY (`reviewed_by_admin_id`) 
+      REFERENCES `admins`(`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+
+  -- A CHECK constraint to enforce that only one of `reported_student_id` or `reported_teacher_id` is set
+  -- This requires MySQL 8.0.16 or later. For older versions, this logic must be enforced at the application level.
+  CONSTRAINT `chk_indiscipline_target` CHECK (
+      (`target_type` = 'Student' AND `reported_student_id` IS NOT NULL AND `reported_teacher_id` IS NULL) OR
+      (`target_type` = 'Teacher' AND `reported_teacher_id` IS NOT NULL AND `reported_student_id` IS NULL)
+  )
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+ALTER TABLE `student_test_attempts`
+ADD COLUMN `student_answers_json` JSON NULL AFTER `total_marks`;
+
+
+CREATE TABLE student_achievements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    achievement_date DATE,
+    certificate_url VARCHAR(255), -- URL to the uploaded certificate file (e.g., PDF, image, from Cloudinary)
+    uploaded_by_user_id INT,      -- ID of the Admin/Teacher who uploaded it
+    uploaded_by_role VARCHAR(50), -- Role of the uploader (e.g., 'Admin', 'Teacher')
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+    -- You might want to add more foreign keys for uploaded_by_user_id depending on your system,
+    -- but for student view, it's fine as metadata.
+);
+
+
+-- 1. Create the `departments` table
+CREATE TABLE `departments` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `department_name` VARCHAR(100) NOT NULL UNIQUE,
+  `hod_teacher_id` INT NULL COMMENT 'Head of Department (optional)', -- FK to teachers table
+  `description` TEXT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 2. Add `department_id` to the `teachers` table
+ALTER TABLE `teachers`
+ADD COLUMN `department_id` INT NULL AFTER `subject_taught`;
+
+-- 3. Add a foreign key constraint to `teachers` for `department_id`
+ALTER TABLE `teachers`
+ADD CONSTRAINT `fk_teacher_department`
+FOREIGN KEY (`department_id`) REFERENCES `departments`(`id`)
+ON DELETE SET NULL ON UPDATE CASCADE; -- If department is deleted, teacher's department becomes NULL
+
+-- 4. Add a foreign key constraint to `departments` for `hod_teacher_id`
+-- (This should be done *after* `department_id` is added to teachers,
+-- to avoid circular dependency issues if you try to set HOD immediately)
+ALTER TABLE `departments`
+ADD CONSTRAINT `fk_department_hod`
+FOREIGN KEY (`hod_teacher_id`) REFERENCES `teachers`(`id`)
+ON DELETE SET NULL ON UPDATE CASCADE;
+
+
+
+CREATE TABLE IF NOT EXISTS `books` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `author` VARCHAR(255) NOT NULL,
+  `isbn` VARCHAR(20) UNIQUE,
+  `publisher` VARCHAR(255),
+  `publication_year` INT,
+  `genre` VARCHAR(100),
+  `total_copies` INT NOT NULL DEFAULT 1,
+  `available_copies` INT NOT NULL DEFAULT 1,
+  `cover_image_url` VARCHAR(255) NULL COMMENT 'URL to book cover image (e.g., from Cloudinary)',
+  `description` TEXT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 6. Create the `borrow_records` table
+-- Tracks borrowing history and current status.
+CREATE TABLE IF NOT EXISTS `borrow_records` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `book_id` INT NOT NULL,
+  `student_id` INT NOT NULL,
+  `borrow_date` DATE NOT NULL,
+  `due_date` DATE NOT NULL,
+  `return_date` DATE NULL COMMENT 'NULL if not yet returned',
+  `fine_amount` DECIMAL(10, 2) DEFAULT 0.00,
+  `status` ENUM('Borrowed', 'Returned', 'Overdue', 'Lost') NOT NULL DEFAULT 'Borrowed',
+  `recorded_by_admin_id` INT NULL COMMENT 'ID of the Admin/Teacher who recorded the borrow/return',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`book_id`) REFERENCES `books`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  -- Assuming `admins` table for `recorded_by_admin_id`. Adjust if using `teachers` table for this.
+  FOREIGN KEY (`recorded_by_admin_id`) REFERENCES `admins`(`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+ALTER TABLE `borrow_records`
+DROP FOREIGN KEY `borrow_records_ibfk_3`;
+
+ALTER TABLE `borrow_records`
+ADD COLUMN `recorded_by_teacher_id` INT NULL AFTER `status`;
+
+ALTER TABLE `borrow_records`
+ADD CONSTRAINT `fk_borrow_teacher`
+FOREIGN KEY (`recorded_by_teacher_id`) REFERENCES `teachers`(`id`)
+ON DELETE SET NULL ON UPDATE CASCADE;
+
+
+
+SELECT
+    (SELECT COUNT(id) FROM books) AS total_books,
+    (SELECT SUM(available_copies) FROM books) AS available_books,
+    (SELECT COUNT(id) FROM borrow_records WHERE status = 'Borrowed') AS total_borrowed,
+    (SELECT COUNT(id) FROM borrow_records WHERE status = 'Overdue') AS overdue_books,
+    (SELECT SUM(fine_amount) FROM borrow_records) AS total_fines_charged,
+    (SELECT SUM(amount) FROM income WHERE category = 'Library Fine' OR source = 'Library Fine') AS library_income,
+    (SELECT SUM(amount) FROM expenses WHERE category = 'Library') AS library_expenses;
+
+
+    -- Table to store the main conversation thread between a student and a teacher for a subject
+CREATE TABLE `st_conversations` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `student_id` INT NOT NULL,
+  `teacher_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_message_at` TIMESTAMP NULL DEFAULT NULL,
+  
+  CONSTRAINT `fk_stconv_student` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_stconv_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_stconv_subject` FOREIGN KEY (`subject_id`) REFERENCES `subjects`(`id`) ON DELETE CASCADE,
+  
+  -- Ensures only ONE conversation thread exists for a unique student-teacher-subject combo
+  UNIQUE KEY `unique_conversation` (`student_id`, `teacher_id`, `subject_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table to store every single message within a conversation
+CREATE TABLE `st_messages` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `conversation_id` INT NOT NULL,
+  `sender_role` ENUM('Student', 'Teacher') NOT NULL,
+  `sender_id` INT NOT NULL COMMENT 'Corresponds to student_id or teacher_id',
+  `message_text` TEXT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  
+  CONSTRAINT `fk_stmsg_conversation` FOREIGN KEY (`conversation_id`) REFERENCES `st_conversations`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `user_public_keys` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `user_role` ENUM('Student', 'Teacher') NOT NULL,
+  `public_key` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `unique_user` (`user_id`, `user_role`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `st_messages` MODIFY `message_text` TEXT NOT NULL;
+
+
+-- Main table for forum posts (threads)
+CREATE TABLE `forum_posts` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `class_id` INT NOT NULL,
+  `creator_id` INT NOT NULL,
+  `creator_role` ENUM('Student', 'Teacher') NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `content` TEXT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_reply_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `is_pinned` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_locked` TINYINT(1) NOT NULL DEFAULT 0,
+  CONSTRAINT `fk_fp_class` FOREIGN KEY (`class_id`) REFERENCES `classes`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table for replies to a specific post
+CREATE TABLE `forum_replies` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `post_id` INT NOT NULL,
+  `replier_id` INT NOT NULL,
+  `replier_role` ENUM('Student', 'Teacher') NOT NULL,
+  `content` TEXT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_fr_post` FOREIGN KEY (`post_id`) REFERENCES `forum_posts`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `sports_clubs` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(150) NOT NULL UNIQUE,
+  `description` TEXT NULL,
+  `teacher_in_charge_id` INT NULL,
+  `image_url` VARCHAR(255) NULL COMMENT 'URL to the club logo/image',
+  `meeting_schedule` VARCHAR(255) NULL COMMENT 'e.g., Tuesdays & Thursdays at 3 PM',
+  `status` ENUM('Active', 'Inactive') NOT NULL DEFAULT 'Active',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_club_teacher` FOREIGN KEY (`teacher_in_charge_id`) REFERENCES `teachers`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Junction table to store student memberships for each club
+CREATE TABLE `club_members` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `club_id` INT NOT NULL,
+  `student_id` INT NOT NULL,
+  `join_date` DATE NOT NULL DEFAULT (CURDATE()),
+  `role` ENUM('Member', 'Captain', 'Co-Captain', 'Treasurer') NOT NULL DEFAULT 'Member',
+  CONSTRAINT `fk_cm_club` FOREIGN KEY (`club_id`) REFERENCES `sports_clubs`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cm_student` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE,
+  -- A student can only join a specific club once
+  UNIQUE KEY `unique_membership` (`club_id`, `student_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ALTER TABLE `sports_clubs`
+ADD COLUMN `department_id` INT NULL DEFAULT NULL AFTER `name`,
+ADD CONSTRAINT `fk_club_department` FOREIGN KEY (`department_id`) REFERENCES `departments`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+
+
+ALTER TABLE `sports_clubs`
+ADD COLUMN `member_limit` INT NULL DEFAULT NULL AFTER `meeting_schedule`;
+
+
+CREATE TABLE `cultural_programs` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(150) NOT NULL,
+  `description` TEXT NULL,
+  `teacher_in_charge_id` INT NULL,
+  `program_date` DATE NOT NULL,
+  `location` VARCHAR(255) NULL,
+  `image_url` VARCHAR(255) NULL,
+  `registration_deadline` DATE NULL,
+  `participant_limit` INT NULL COMMENT 'NULL for no limit',
+  `status` ENUM('Active', 'Upcoming', 'Completed', 'Cancelled') NOT NULL DEFAULT 'Active',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_program_teacher` FOREIGN KEY (`teacher_in_charge_id`) REFERENCES `teachers`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Junction table to track student registrations for each program
+CREATE TABLE `program_participants` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `program_id` INT NOT NULL,
+  `student_id` INT NOT NULL,
+  `registration_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_pp_program` FOREIGN KEY (`program_id`) REFERENCES `cultural_programs`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_pp_student` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE,
+  -- A student can only register for a program once
+  UNIQUE KEY `unique_participation` (`program_id`, `student_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Main table for competitions
+CREATE TABLE `competitions` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(150) NOT NULL,
+  `description` TEXT NULL,
+  `teacher_in_charge_id` INT NULL,
+  `competition_date` DATE NOT NULL,
+  `location` VARCHAR(255) NULL,
+  `image_url` VARCHAR(255) NULL,
+  `registration_deadline` DATE NULL,
+  `participant_limit` INT NULL COMMENT 'NULL for no limit',
+  `status` ENUM('Upcoming', 'Active', 'Completed', 'Cancelled') NOT NULL DEFAULT 'Upcoming',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_comp_teacher` FOREIGN KEY (`teacher_in_charge_id`) REFERENCES `teachers`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Junction table to track student registrations for each competition
+CREATE TABLE `competition_participants` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `competition_id` INT NOT NULL,
+  `student_id` INT NOT NULL,
+  `registration_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_cp_competition` FOREIGN KEY (`competition_id`) REFERENCES `competitions`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cp_student` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE,
+  -- A student can only register for a specific competition once
+  UNIQUE KEY `unique_participation` (`competition_id`, `student_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE `school_documents` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NULL,
+  `file_url` VARCHAR(255) NOT NULL COMMENT 'Direct URL to the uploaded file',
+  `file_type` VARCHAR(50) NULL COMMENT 'e.g., PDF, DOCX, PNG',
+  `uploaded_by_admin_id` INT NOT NULL,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_doc_admin` FOREIGN KEY (`uploaded_by_admin_id`) REFERENCES `admins`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ALTER TABLE teachers
+ADD COLUMN is_blocked TINYINT(1) NOT NULL DEFAULT 0 AFTER created_by_admin_id;
+
+
+ALTER TABLE `teachers`
+ADD COLUMN `last_message_check` TIMESTAMP NULL DEFAULT NULL AFTER `last_seen`;
+
+
+CREATE TABLE `st_message_read_status` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `message_id` INT NOT NULL,
+  `conversation_id` INT NOT NULL,
+  `reader_id` INT NOT NULL COMMENT 'ID of the teacher who read the message',
+  `reader_role` ENUM('Teacher') NOT NULL DEFAULT 'Teacher',
+  `read_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_st_mrs_message` FOREIGN KEY (`message_id`) REFERENCES `st_messages`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_st_mrs_conversation` FOREIGN KEY (`conversation_id`) REFERENCES `st_conversations`(`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_reader_message` (`message_id`, `reader_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+-- Corrected CREATE TABLE statement for school_settings
+CREATE TABLE `school_settings` (
+  `id` INT NOT NULL PRIMARY KEY, -- Removed AUTO_INCREMENT
+  `hero_image_url` VARCHAR(255) NULL COMMENT 'URL for the background image of the hero section',
+  `hero_title_prefix` VARCHAR(255) NULL COMMENT 'First part of the main headline (e.g., "Shaping")',
+  `hero_title_highlight` VARCHAR(255) NULL COMMENT 'Highlighted part of the main headline (e.g., "Tomorrow\'s")',
+  `hero_title_suffix` VARCHAR(255) NULL COMMENT 'Last part of the main headline (e.g., "Leaders Today")',
+  `hero_description` TEXT NULL COMMENT 'The descriptive text under the headline',
+  `button1_text` VARCHAR(100) NULL COMMENT 'Text for the first call-to-action button',
+  `button1_url` VARCHAR(255) NULL COMMENT 'URL for the first button',
+  `button2_text` VARCHAR(100) NULL COMMENT 'Text for the second call-to-action button',
+  `button2_url` VARCHAR(255) NULL COMMENT 'URL for the second button',
+  `stat1_value` VARCHAR(50) NULL COMMENT 'Value for the first statistic (e.g., "1500+")',
+  `stat1_label` VARCHAR(100) NULL COMMENT 'Label for the first statistic (e.g., "Students")',
+  `stat2_value` VARCHAR(50) NULL,
+  `stat2_label` VARCHAR(100) NULL,
+  `stat3_value` VARCHAR(50) NULL,
+  `stat3_label` VARCHAR(100) NULL,
+  `stat4_value` VARCHAR(50) NULL,
+  `stat4_label` VARCHAR(100) NULL,
+  `updated_by_admin_id` INT NULL COMMENT 'ID of the admin who last updated these settings',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT `fk_settings_updater`
+    FOREIGN KEY (`updated_by_admin_id`) REFERENCES `admins`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+  -- Removed the problematic CHECK constraint
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insert/Update initial data for the settings (ensure id is always 1)
+-- This statement will insert the row if it doesn't exist (because id=1 is new).
+-- If id=1 already exists (e.g., you ran this script again), it will update the existing row.
+INSERT INTO `school_settings` (
+  `id`, `hero_image_url`, `hero_title_prefix`, `hero_title_highlight`, `hero_title_suffix`,
+  `hero_description`, `button1_text`, `button1_url`, `button2_text`, `button2_url`,
+  `stat1_value`, `stat1_label`, `stat2_value`, `stat2_label`,
+  `stat3_value`, `stat3_label`, `stat4_value`, `stat4_label`
+) VALUES (
+  1,
+  'uploads/sc.png', -- Default image URL
+  'Shaping',
+  'Tomorrow\'s',
+  'Leaders Today',
+  'Excellence School provides world-class education from Nursery to 12th grade, fostering creativity, critical thinking, and character development in every student.',
+  'Apply Now', '#apply', -- Example URL
+  'Virtual Tour', '#virtual-tour', -- Example URL
+  '1500+', 'Students',
+  '150+', 'Faculty',
+  '98%', 'Success Rate',
+  '25+', 'Years Excellence'
+)
+ON DUPLICATE KEY UPDATE
+  `hero_image_url` = VALUES(`hero_image_url`),
+  `hero_title_prefix` = VALUES(`hero_title_prefix`),
+  `hero_title_highlight` = VALUES(`hero_title_highlight`),
+  `hero_title_suffix` = VALUES(`hero_title_suffix`),
+  `hero_description` = VALUES(`hero_description`),
+  `button1_text` = VALUES(`button1_text`),
+  `button1_url` = VALUES(`button1_url`),
+  `button2_text` = VALUES(`button2_text`),
+  `button2_url` = VALUES(`button2_url`),
+  `stat1_value` = VALUES(`stat1_value`),
+  `stat1_label` = VALUES(`stat1_label`),
+  `stat2_value` = VALUES(`stat2_value`),
+  `stat2_label` = VALUES(`stat2_label`),
+  `stat3_value` = VALUES(`stat3_value`),
+  `stat3_label` = VALUES(`stat3_label`),
+  `stat4_value` = VALUES(`stat4_value`),
+  `stat4_label` = VALUES(`stat4_label`),
+  `updated_at` = CURRENT_TIMESTAMP; -- Manually update updated_at if it's not handled by ON UPDATE CURRENT_TIMESTAMP
+
+
+
+  -- SQL to create the new `about_settings` table
+CREATE TABLE `about_settings` (
+  `id` INT NOT NULL PRIMARY KEY DEFAULT 1, -- Forces a single row with ID 1 for global settings
+  `about_section_title` VARCHAR(255) NULL COMMENT 'Main title for the About section (e.g., "About Excellence School")',
+  `about_section_description` TEXT NULL COMMENT 'Main introductory paragraph for the About section',
+  `about_image_url` VARCHAR(255) NULL COMMENT 'URL for the school building image in About section',
+  `our_legacy_text` TEXT NULL COMMENT 'Text for the "Our Legacy" part',
+  `our_vision_text` TEXT NULL COMMENT 'Text for the "Our Vision" part',
+  `our_mission_text` TEXT NULL COMMENT 'Text for the "Our Mission" part',
+  `features_json` JSON NULL COMMENT 'JSON array of objects for features (title, description, icon SVG)',
+  `principal_message_quote` TEXT NULL COMMENT 'The principal\'s quote',
+  `principal_name` VARCHAR(255) NULL COMMENT 'Name of the principal',
+  `principal_title_role` VARCHAR(255) NULL COMMENT 'Title/Role of the principal (e.g., "Principal, Excellence School")',
+  `principal_qualifications` VARCHAR(255) NULL COMMENT 'Principal\'s qualifications (e.g., "M.Ed., Ph.D.")',
+  `principal_image_url` VARCHAR(255) NULL COMMENT 'URL for the principal\'s photo',
+  `updated_by_admin_id` INT NULL COMMENT 'ID of the admin who last updated these settings',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT `fk_about_settings_updater`
+    FOREIGN KEY (`updated_by_admin_id`) REFERENCES `admins`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insert/Update initial data for about_settings (ensure id is always 1)
+INSERT INTO `about_settings` (
+  `id`,
+  `about_section_title`,
+  `about_section_description`,
+  `about_image_url`,
+  `our_legacy_text`,
+  `our_vision_text`,
+  `our_mission_text`,
+  `features_json`,
+  `principal_message_quote`,
+  `principal_name`,
+  `principal_title_role`,
+  `principal_qualifications`,
+  `principal_image_url`
+) VALUES (
+  1,
+  'About Excellence School',
+  'Established in 1995, Excellence School has been at the forefront of quality education, nurturing young minds and building strong foundations for future success.',
+  'https://placehold.co/900x600/6b7280/d1d5db?text=School+Building', -- Default about image
+  'Founded with a vision to provide world-class education, Excellence School has grown from a small institution to one of the most respected schools in the region. Our commitment to academic excellence and character development has shaped thousands of successful individuals.',
+  'To be a globally recognized institution that nurtures confident, compassionate, and capable individuals who contribute positively to society.',
+  'To provide a stimulating and supportive learning environment that encourages intellectual curiosity, creativity, and critical thinking while instilling strong moral values.',
+  JSON_ARRAY(
+    JSON_OBJECT('title', 'Excellence in Education', 'description', 'Recognized for outstanding academic achievements and innovative teaching methods.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-white"><circle cx="12" cy="8" r="7"/><path d="M12 15a7 7 0 0 0-7 7l5-5L12 22l2.5-5 5 5a7 7 0 0 0-7-7z"/></svg>'),
+    JSON_OBJECT('title', 'Holistic Development', 'description', 'Focus on intellectual, emotional, social, and physical development of every child.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-white"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 17v-2a4 4 0 0 0-4-4H6"/><path d="M12.5 10a4.5 4.5 0 0 1 4.5 4.5v-13h-4.5a4.5 4.5 0 0 1-4.5 4.5z"/></svg>'),
+    JSON_OBJECT('title', 'Future Ready', 'description', 'Preparing students for the challenges and opportunities of tomorrow\'s world.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-white"><path d="M12 22a7 7 0 0 1-7-7c0-2.34 1.25-4.32 3.5-5.32L12 2a7 7 0 0 1 7 7c0 2.34-1.25 4.32-3.5 5.32L12 22z"/><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>'),
+    JSON_OBJECT('title', 'Comprehensive Curriculum', 'description', 'CBSE curriculum enriched with modern pedagogical approaches and technology.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-white"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>')
+  ),
+  '"At Excellence School, we believe that every child is unique and has the potential to achieve greatness. Our role is to provide the right environment, guidance, and opportunities for them to discover their talents and reach their full potential. We are committed to preparing our students not just for examinations, but for life."',
+  'Dr. Sarah Johnson',
+  'Principal, Excellence School',
+  'M.Ed., Ph.D. in Educational Leadership',
+  'https://placehold.co/400x400/1e293b/d1d5db?text=Dr.+Sarah+Johnson' -- Default principal image
+)
+ON DUPLICATE KEY UPDATE
+  `about_section_title` = VALUES(`about_section_title`),
+  `about_section_description` = VALUES(`about_section_description`),
+  `about_image_url` = VALUES(`about_image_url`),
+  `our_legacy_text` = VALUES(`our_legacy_text`),
+  `our_vision_text` = VALUES(`our_vision_text`),
+  `our_mission_text` = VALUES(`our_mission_text`),
+  `features_json` = VALUES(`features_json`),
+  `principal_message_quote` = VALUES(`principal_message_quote`),
+  `principal_name` = VALUES(`principal_name`),
+  `principal_title_role` = VALUES(`principal_title_role`),
+  `principal_qualifications` = VALUES(`principal_qualifications`),
+  `principal_image_url` = VALUES(`principal_image_url`),
+  `updated_at` = CURRENT_TIMESTAMP;
+
+
+-- SQL to create the new `academics_settings` table
+CREATE TABLE `academics_settings` (
+  `id` INT NOT NULL PRIMARY KEY DEFAULT 1, -- Forces a single row with ID 1 for global settings
+  `academics_section_title` VARCHAR(255) NULL COMMENT 'Main title for the Academics section (e.g., "Academic Excellence")',
+  `academics_section_description` TEXT NULL COMMENT 'Main introductory paragraph for the Academics section',
+  `academic_levels_json` JSON NULL COMMENT 'JSON array of objects for academic levels (title, subtitle, description, subjects array, icon SVG)',
+  `academic_features_title` VARCHAR(255) NULL COMMENT 'Title for the academic features sub-section (e.g., "Academic Features")',
+  `academic_features_json` JSON NULL COMMENT 'JSON array of objects for academic features (title, description, icon SVG)',
+  `updated_by_admin_id` INT NULL COMMENT 'ID of the admin who last updated these settings',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT `fk_academics_settings_updater`
+    FOREIGN KEY (`updated_by_admin_id`) REFERENCES `admins`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insert/Update initial data for academics_settings (ensure id is always 1)
+INSERT INTO `academics_settings` (
+  `id`,
+  `academics_section_title`,
+  `academics_section_description`,
+  `academic_levels_json`,
+  `academic_features_title`,
+  `academic_features_json`
+) VALUES (
+  1,
+  'Academic Excellence',
+  'Our comprehensive curriculum from Nursery to Class XII ensures holistic development and prepares students for future challenges with confidence and competence.',
+  JSON_ARRAY(
+    JSON_OBJECT(
+      'title', 'Nursery & Pre-Primary',
+      'subtitle', 'Ages 3-5',
+      'description', 'Play-based learning focusing on social skills, creativity, and basic literacy.',
+      'subjects', JSON_ARRAY("Language Development", "Number Concepts", "Creative Arts", "Physical Development"),
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 mx-auto mb-4 text-white"><path d="m14 19-3 3v-2l-3-3m0 0-3-3L2 14v-2l2-2m-2 2 3-3L5 9a2 2 0 0 1 3-3 2 2 0 0 1 3 3v5c0 1-1.5 3-3 3-1.5 0-3-2-3-3v-5m10-2c-1.5 0-3 2-3 3v5c0 1 1.5 3 3 3 1.5 0 3-2 3-3V9m-3-3a2 2 0 0 1 3 3v5c0 1.5 1.5 3 3 3l-3 3-2-2"/></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'Primary (Classes I-V)',
+      'subtitle', 'Ages 6-10',
+      'description', 'Foundation building with emphasis on core subjects and skill development.',
+      'subjects', JSON_ARRAY("English", "Mathematics", "Science", "Social Studies", "Computer Science"),
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 mx-auto mb-4 text-white"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'Middle School (Classes VI-VIII)',
+      'subtitle', 'Ages 11-13',
+      'description', 'Expanded curriculum with subject specialization and critical thinking.',
+      'subjects', JSON_ARRAY("Advanced Mathematics", "Physics", "Chemistry", "Biology", "History", "Geography"),
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 mx-auto mb-4 text-white"><path d="M6 19c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M12 21c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M18 19c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M20 17H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2z"/><path d="M20 7H4"/></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'Secondary (Classes IX-X)',
+      'subtitle', 'Ages 14-15',
+      'description', 'CBSE board preparation with comprehensive subject coverage.',
+      'subjects', JSON_ARRAY("Mathematics", "Science", "Social Science", "English", "Optional Subjects"),
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 mx-auto mb-4 text-white"><path d="M16 3H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><path d="M10 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M14 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'Senior Secondary (Classes XI-XII)',
+      'subtitle', 'Ages 16-17',
+      'description', 'Stream-based education preparing for higher studies and careers.',
+      'subjects', JSON_ARRAY("Science Stream", "Commerce Stream", "Humanities Stream"),
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 mx-auto mb-4 text-white"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-2-8h4m-2-2V8m0 4l-2 2m4 0l-2-2z"/></svg>'
+    )
+  ),
+  'Academic Features', -- academic_features_title
+  JSON_ARRAY(
+    JSON_OBJECT(
+      'title', 'CBSE Curriculum',
+      'description', 'Following NCERT guidelines with modern teaching methodologies',
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-white"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'State-of-Art Labs',
+      'description', 'Well-equipped science, computer, and language laboratories',
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-white"><path d="M6 19c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M12 21c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M18 19c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M20 17H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2z"/><path d="M20 7H4"/></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'Arts & Crafts',
+      'description', 'Dedicated spaces for creative expression and artistic development',
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-white"><path d="M14 19l-3 3v-2l-3-3m0 0-3-3L2 14v-2l2-2m-2 2 3-3L5 9a2 2 0 0 1 3-3 2 2 0 0 1 3 3v5c0 1-1.5 3-3 3-1.5 0-3-2-3-3v-5m10-2c-1.5 0-3 2-3 3v5c0 1.5 1.5 3 3 3l-3 3-2-2"/></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'Sports & Fitness',
+      'description', 'Comprehensive physical education and sports programs',
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-white"><path d="M14 10l-2.5 5L9 10a2 2 0 0 0-3 3l.5 1m-1-1h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H8l-3 5m4 4l-4 4"/></svg>'
+    )
+  )
+)
+ON DUPLICATE KEY UPDATE
+  `academics_section_title` = VALUES(`academics_section_title`),
+  `academics_section_description` = VALUES(`academics_section_description`),
+  `academic_levels_json` = VALUES(`academic_levels_json`),
+  `academic_features_title` = VALUES(`academic_features_title`),
+  `academic_features_json` = VALUES(`academic_features_json`),
+  `updated_at` = CURRENT_TIMESTAMP;
+  
+  -- SQL to create the new `admissions_settings` table
+CREATE TABLE `admissions_settings` (
+  `id` INT NOT NULL PRIMARY KEY DEFAULT 1, -- Forces a single row with ID 1 for global settings
+  `admissions_section_title` VARCHAR(255) NULL COMMENT 'Main title for the Admissions section (e.g., "Admissions")',
+  `admissions_section_description` TEXT NULL COMMENT 'Main introductory paragraph for the Admissions section',
+  `admission_process_title` VARCHAR(255) NULL COMMENT 'Title for the admission process sub-section (e.g., "Admission Process")',
+  `admission_process_json` JSON NULL COMMENT 'JSON array of objects for admission process steps (title, description, icon SVG)',
+  `important_dates_title` VARCHAR(255) NULL COMMENT 'Title for the important dates sub-section (e.g., "Important Dates - Academic Year")',
+  `important_dates_json` JSON NULL COMMENT 'JSON array of objects for important dates (date_text, description)',
+  `updated_by_admin_id` INT NULL COMMENT 'ID of the admin who last updated these settings',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT `fk_admissions_settings_updater`
+    FOREIGN KEY (`updated_by_admin_id`) REFERENCES `admins`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insert/Update initial data for admissions_settings (ensure id is always 1)
+INSERT INTO `admissions_settings` (
+  `id`,
+  `admissions_section_title`,
+  `admissions_section_description`,
+  `admission_process_title`,
+  `admission_process_json`,
+  `important_dates_title`,
+  `important_dates_json`
+) VALUES (
+  1,
+  'Admissions',
+  'Join our vibrant learning community. We welcome students who are eager to learn, grow, and contribute to our school\'s legacy of excellence.',
+  'Admission Process',
+  JSON_ARRAY(
+    JSON_OBJECT(
+      'title', 'Application Form',
+      'description', 'Submit the completed admission form with required documents',
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" class="lucide-icon h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'Interaction',
+      'description', 'Parent-student interaction with our admission counselor',
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" class="lucide-icon h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'Assessment',
+      'description', 'Age-appropriate assessment for academic readiness',
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" class="lucide-icon h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>'
+    ),
+    JSON_OBJECT(
+      'title', 'Confirmation',
+      'description', 'Admission confirmation and fee payment',
+      'icon', '<svg xmlns="http://www.w3.org/2000/svg" class="lucide-icon h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-8.15"></path><path d="m9 11 3 3L22 4"></path></svg>'
+    )
+  ),
+  'Important Dates - Academic Year 2024-25',
+  JSON_ARRAY(
+    JSON_OBJECT('date_text', 'December 2023', 'description', 'Admission Forms Available'),
+    JSON_OBJECT('date_text', 'March 2024', 'description', 'Last Date for Applications'),
+    JSON_OBJECT('date_text', 'April 2024', 'description', 'New Session Begins')
+  )
+)
+ON DUPLICATE KEY UPDATE
+  `admissions_section_title` = VALUES(`admissions_section_title`),
+  `admissions_section_description` = VALUES(`admissions_section_description`),
+  `admission_process_title` = VALUES(`admission_process_title`),
+  `admission_process_json` = VALUES(`admission_process_json`),
+  `important_dates_title` = VALUES(`important_dates_title`),
+  `important_dates_json` = VALUES(`important_dates_json`),
+  `updated_at` = CURRENT_TIMESTAMP;
+
+
+
+  -- SQL to create the new `gallery_settings` table
+CREATE TABLE `gallery_settings` (
+  `id` INT NOT NULL PRIMARY KEY DEFAULT 1, -- Forces a single row with ID 1 for global settings
+  `gallery_section_title` VARCHAR(255) NULL COMMENT 'Main title for the Gallery section (e.g., "Gallery")',
+  `gallery_section_description` TEXT NULL COMMENT 'Main introductory paragraph for the Gallery section',
+  
+  `categories_json` JSON NULL COMMENT 'JSON array of objects for gallery categories (id, name, icon SVG)',
+  `gallery_items_json` JSON NULL COMMENT 'JSON array of objects for gallery items (title, category, type, description, src_url)',
+  
+  `view_more_button_text` VARCHAR(100) NULL COMMENT 'Text for the "View More" button',
+  `view_more_button_url` VARCHAR(255) NULL COMMENT 'URL for the "View More" button',
+  
+  `infra_highlights_title` VARCHAR(255) NULL COMMENT 'Title for the Infrastructure Highlights sub-section',
+  `infra_highlights_json` JSON NULL COMMENT 'JSON array of objects for infrastructure highlights (title, count, icon SVG)',
+  
+  `updated_by_admin_id` INT NULL COMMENT 'ID of the admin who last updated these settings',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT `fk_gallery_settings_updater`
+    FOREIGN KEY (`updated_by_admin_id`) REFERENCES `admins`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insert/Update initial data for gallery_settings (ensure id is always 1)
+INSERT INTO `gallery_settings` (
+  `id`,
+  `gallery_section_title`,
+  `gallery_section_description`,
+  `categories_json`,
+  `gallery_items_json`,
+  `view_more_button_text`,
+  `view_more_button_url`,
+  `infra_highlights_title`,
+  `infra_highlights_json`
+) VALUES (
+  1,
+  'Gallery',
+  'Explore our vibrant school life through images and videos. From state-of-the-art infrastructure to exciting activities and memorable events.',
+  JSON_ARRAY(
+    JSON_OBJECT("id", "all", "name", "All", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 12h16"/><path d="M12 4v16"/></svg>'), -- Added 'All' category
+    JSON_OBJECT("id", "infrastructure", "name", "Infrastructure", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'),
+    JSON_OBJECT("id", "activities", "name", "Activities", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"/><rect width="18" height="18" x="3" y="2" rx="2" ry="2"/><circle cx="12" cy="7" r="4"/><line x1="12" x2="12" y1="2" y2="2"/></svg>'),
+    JSON_OBJECT("id", "academics", "name", "Academics", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2 0 0 1 0-5H20"/><polyline points="10 2 10 22"/></svg>'),
+    JSON_OBJECT("id", "sports", "name", "Sports", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 17.64L12 12l6.36-6.36A9 9 0 0 1 21 12h-3"/><path d="M11.95 21l-.03-2.92a2 2 0 0 1-2-2v-1.12a2 2 0 0 1 2-2h1.1a2 2 0 0 1 2 2V19l.03 2"/><path d="M3.64 17.64A9 9 0 0 1 3 12h3"/><path d="M12 3v9"/></svg>'),
+    JSON_OBJECT("id", "events", "name", "Events", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8A6 6 0 0 0 10 8"/><path d="M2 8A6 6 0 0 1 14 8"/><path d="M18 10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2V10z"/><rect x="4" y="10" width="16" height="10" rx="2" ry="2"/></svg>')
+  ),
+  JSON_ARRAY(
+    JSON_OBJECT("title", "Modern Science Laboratory", "category", "infrastructure", "type", "image", "description", "State-of-the-art science lab with latest equipment", "src_url", "https://via.placeholder.com/600/4c51bf/ffffff?text=Science+Lab"),
+    JSON_OBJECT("title", "Library Reading Hall", "category", "infrastructure", "type", "image", "description", "Spacious library with extensive collection", "src_url", "https://via.placeholder.com/600/667eea/ffffff?text=Library"),
+    JSON_OBJECT("title", "Annual Sports Day", "category", "sports", "type", "image", "description", "Students participating in athletic events", "src_url", "https://via.placeholder.com/600/4c51bf/ffffff?text=Sports+Day"),
+    JSON_OBJECT("title", "Science Exhibition", "category", "academics", "type", "image", "description", "Students presenting their science projects", "src_url", "https://via.placeholder.com/600/667eea/ffffff?text=Science+Exhibition"),
+    JSON_OBJECT("title", "Cultural Performance", "category", "events", "type", "video", "description", "Annual day cultural program highlights", "src_url", "https://www.w3schools.com/html/mov_bbb.mp4"),
+    JSON_OBJECT("title", "Computer Lab", "category", "infrastructure", "type", "image", "description", "Modern computer lab with latest technology", "src_url", "https://via.placeholder.com/600/4c51bf/ffffff?text=Computer+Lab"),
+    JSON_OBJECT("title", "Art & Craft Workshop", "category", "activities", "type", "image", "description", "Students engaged in creative arts", "src_url", "https://via.placeholder.com/600/667eea/ffffff?text=Art+Workshop"),
+    JSON_OBJECT("title", "Basketball Championship", "category", "sports", "type", "image", "description", "Inter-house basketball tournament", "src_url", "https://via.placeholder.com/600/4c51bf/ffffff?text=Basketball"),
+    JSON_OBJECT("title", "Mathematics Competition", "category", "academics", "type", "image", "description", "Mental math competition winners", "src_url", "https://via.placeholder.com/600/667eea/ffffff?text=Maths+Comp"),
+    JSON_OBJECT("title", "Music Concert", "category", "events", "type", "video", "description", "Spring music concert performance", "src_url", "https://www.w3schools.com/html/mov_bbb.mp4"),
+    JSON_OBJECT("title", "School Auditorium", "category", "infrastructure", "type", "image", "description", "Multi-purpose auditorium for events", "src_url", "https://via.placeholder.com/600/4c51bf/ffffff?text=Auditorium"),
+    JSON_OBJECT("title", "Robotics Club", "category", "activities", "type", "image", "description", "Students working on robotics projects", "src_url", "https://via.placeholder.com/600/667eea/ffffff?text=Robotics+Club")
+  ),
+  'View More Photos & Videos',
+  '#', -- Placeholder URL for the "View More" button
+  'Infrastructure Highlights',
+  JSON_ARRAY(
+    JSON_OBJECT("title", "Smart Classrooms", "count", "40+", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><polyline points="10 2 10 22"/></svg>'),
+    JSON_OBJECT("title", "Science Labs", "count", "6", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>'),
+    JSON_OBJECT("title", "Sports Facilities", "count", "15+", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 17.64L12 12l6.36-6.36A9 9 0 0 1 21 12h-3"/><path d="M11.95 21l-.03-2.92a2 2 0 0 1-2-2v-1.12a2 2 0 0 1 2-2h1.1a2 2 0 0 1 2 2V19l.03 2"/><path d="M3.64 17.64A9 9 0 0 1 3 12h3"/><path d="M12 3v9"/></svg>'),
+    JSON_OBJECT("title", "Activity Rooms", "count", "10+", "icon", '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"/><rect width="18" height="18" x="3" y="2" rx="2" ry="2"/><circle cx="12" cy="7" r="4"/><line x1="12" x2="12" y1="2" y2="2"/></svg>')
+  )
+)
+ON DUPLICATE KEY UPDATE
+  `gallery_section_title` = VALUES(`gallery_section_title`),
+  `gallery_section_description` = VALUES(`gallery_section_description`),
+  `categories_json` = VALUES(`categories_json`),
+  `gallery_items_json` = VALUES(`gallery_items_json`),
+  `view_more_button_text` = VALUES(`view_more_button_text`),
+  `view_more_button_url` = VALUES(`view_more_button_url`),
+  `infra_highlights_title` = VALUES(`infra_highlights_title`),
+  `infra_highlights_json` = VALUES(`infra_highlights_json`),
+  `updated_at` = CURRENT_TIMESTAMP;
+
+
+
+  -- SQL to create the new `achievements_contact_settings` table
+CREATE TABLE `achievements_contact_settings` (
+  `id` INT NOT NULL PRIMARY KEY DEFAULT 1, -- Forces a single row with ID 1 for global settings
+
+  -- Achievements Section Titles
+  `achievements_main_title` VARCHAR(255) NULL COMMENT 'Main title for the Achievements section',
+  `achievements_subtitle` VARCHAR(255) NULL COMMENT 'Subtitle for the Achievements section',
+
+  -- Toppers (Top Performers)
+  `toppers_section_title` VARCHAR(255) NULL COMMENT 'Title for the Toppers sub-section',
+  `toppers_json` JSON NULL COMMENT 'JSON array of objects for toppers (name, details, icon HTML)',
+
+  -- Awards & Recognition
+  `awards_section_title` VARCHAR(255) NULL COMMENT 'Title for the Awards & Recognition sub-section',
+  `awards_subtitle` VARCHAR(255) NULL COMMENT 'Subtitle for the Awards & Recognition sub-section',
+  `awards_json` JSON NULL COMMENT 'JSON array of objects for awards (title, description, icon HTML)',
+
+  -- Contact Information
+  `contact_section_title` VARCHAR(255) NULL COMMENT 'Title for the Contact Info section',
+  `contact_subtitle` VARCHAR(255) NULL COMMENT 'Subtitle for the Contact Info section',
+  `contact_address` TEXT NULL COMMENT 'School address',
+  `contact_phone` VARCHAR(100) NULL COMMENT 'School phone number',
+  `contact_email` VARCHAR(255) NULL COMMENT 'School email address',
+  
+  `updated_by_admin_id` INT NULL COMMENT 'ID of the admin who last updated these settings',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT `fk_ach_contact_settings_updater`
+    FOREIGN KEY (`updated_by_admin_id`) REFERENCES `admins`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Insert/Update initial data for achievements_contact_settings (ensure id is always 1)
+INSERT INTO `achievements_contact_settings` (
+  `id`,
+  `achievements_main_title`,
+  `achievements_subtitle`,
+  `toppers_section_title`,
+  `toppers_json`,
+  `awards_section_title`,
+  `awards_subtitle`,
+  `awards_json`,
+  `contact_section_title`,
+  `contact_subtitle`,
+  `contact_address`,
+  `contact_phone`,
+  `contact_email`
+) VALUES (
+  1,
+  'Achievements_',
+  'Excellence in Action',
+  'Our Top Achievers', -- toppers_section_title
+  JSON_ARRAY(
+    JSON_OBJECT('name', 'Jane Doe', 'details', 'Class 12 Top Performer', 'icon', '<i class="fa-solid fa-user-graduate"></i>'),
+    JSON_OBJECT('name', 'John Smith', 'details', 'Class 12 Science Stream Topper', 'icon', '<i class="fa-solid fa-user-graduate"></i>'),
+    JSON_OBJECT('name', 'Emily White', 'details', 'Class 12 Arts Stream Topper', 'icon', '<i class="fa-solid fa-user-graduate"></i>')
+  ),
+  'Awards & Recognition_',
+  'Our Legacy of Excellence',
+  JSON_ARRAY(
+    JSON_OBJECT('title', 'National Science Fair 2024', 'description', 'Recognized for outstanding innovation and creativity in our student projects on sustainable technology. We received the \'Best School\' award.', 'icon', '<i class="fa-solid fa-trophy icon"></i>'),
+    JSON_OBJECT('title', 'Academic Excellence Award', 'description', 'Awarded by the Ministry of Education for our consistent 100% pass rate in board examinations over the past five years.', 'icon', '<i class="fa-solid fa-star icon"></i>'),
+    JSON_OBJECT('title', 'State-Level Quiz Championship', 'description', 'Our junior team secured the first position in the highly competitive annual State-Level Inter-School Quiz Championship.', 'icon', '<i class="fa-solid fa-award icon"></i>'),
+    JSON_OBJECT('title', 'Best School for Sports', 'description', 'Voted as the \'Best School for Sports\' in the region for our comprehensive sports curriculum and state-of-the-art athletic facilities.', 'icon', '<i class="fa-solid fa-shield-halved icon"></i>')
+  ),
+  'Contact Info_',
+  'Connect With Us',
+  'Innovate Academy, 123 Tech Drive, Silicon Valley, CA 90210',
+  '+1 (555) 123-4567',
+  'info@innovateacademy.edu'
+)
+ON DUPLICATE KEY UPDATE
+  `achievements_main_title` = VALUES(`achievements_main_title`),
+  `achievements_subtitle` = VALUES(`achievements_subtitle`),
+  `toppers_section_title` = VALUES(`toppers_section_title`),
+  `toppers_json` = VALUES(`toppers_json`),
+  `awards_section_title` = VALUES(`awards_section_title`),
+  `awards_subtitle` = VALUES(`awards_subtitle`),
+  `awards_json` = VALUES(`awards_json`),
+  `contact_section_title` = VALUES(`contact_section_title`),
+  `contact_subtitle` = VALUES(`contact_subtitle`),
+  `contact_address` = VALUES(`contact_address`),
+  `contact_phone` = VALUES(`contact_phone`),
+  `contact_email` = VALUES(`contact_email`),
+  `updated_at` = CURRENT_TIMESTAMP;
+
+
+
+-- SQL to create the new `about_mednova_settings` table
+CREATE TABLE `about_mednova_settings` (
+  `id` INT NOT NULL PRIMARY KEY DEFAULT 1,
+
+  -- Hero Section
+  `hero_title` VARCHAR(255) NULL,
+  `hero_subtitle_1` VARCHAR(255) NULL,
+  `hero_subtitle_2` VARCHAR(255) NULL,
+  `hero_image_url` VARCHAR(255) NULL,
+
+  -- Story & Philosophy Section
+  `story_title` VARCHAR(255) NULL,
+  `story_description` TEXT NULL,
+  `legacy_image_url` VARCHAR(255) NULL,
+  `legacy_title` VARCHAR(255) NULL,
+  `legacy_description` TEXT NULL,
+  `vision_title` VARCHAR(255) NULL,
+  `vision_description` TEXT NULL,
+  `mission_title` VARCHAR(255) NULL,
+  `mission_description` TEXT NULL,
+
+  -- Core Pillars (Mednova Advantage)
+  `core_pillars_title` VARCHAR(255) NULL,
+  `core_pillars_description` TEXT NULL,
+  `core_pillars_json` JSON NULL COMMENT 'Array of {title, description, icon}',
+
+  -- Why Choose Us Section
+  `why_choose_us_title` VARCHAR(255) NULL,
+  `why_choose_us_description` TEXT NULL,
+  `why_choose_us_json` JSON NULL COMMENT 'Array of {title, description, icon}',
+
+  -- Curriculum Journey Section
+  `curriculum_journey_title` VARCHAR(255) NULL,
+  `curriculum_journey_description` TEXT NULL,
+  `curriculum_stages_json` JSON NULL COMMENT 'Array of {stage, description, icon}',
+
+  -- Infrastructure Section
+  `infra_title` VARCHAR(255) NULL,
+  `infra_description` TEXT NULL,
+  `infra_json` JSON NULL COMMENT 'Array of {title, description, icon}',
+
+  -- Beyond Academics Section
+  `beyond_academics_title` VARCHAR(255) NULL,
+  `beyond_academics_description` TEXT NULL,
+  `beyond_academics_json` JSON NULL COMMENT 'Array of {title, description, icon}',
+
+  -- Core Values Section
+  `core_values_title` VARCHAR(255) NULL,
+  `core_values_description` TEXT NULL,
+  `core_values_json` JSON NULL COMMENT 'Array of {value, description, icon}',
+
+  -- Faculty Section
+  `faculty_title` VARCHAR(255) NULL,
+  `faculty_description` TEXT NULL,
+  `faculty_image_url` VARCHAR(255) NULL,
+  `faculty_sub_title` VARCHAR(255) NULL,
+  `faculty_sub_description` TEXT NULL,
+  `faculty_highlights_json` JSON NULL COMMENT 'Array of text items for the bulleted list',
+
+  -- Principal's Message Section
+  `principal_image_url` VARCHAR(255) NULL,
+  `principal_message_title` VARCHAR(255) NULL,
+  `principal_quote` TEXT NULL,
+  `principal_name` VARCHAR(255) NULL,
+  `principal_role` VARCHAR(255) NULL,
+  `principal_qualifications` VARCHAR(255) NULL,
+
+  -- Auditing
+  `updated_by_admin_id` INT NULL COMMENT 'ID of the admin who last updated these settings',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT `fk_about_mednova_settings_updater`
+    FOREIGN KEY (`updated_by_admin_id`) REFERENCES `admins`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+  -- Insert/Update initial data for about_mednova_settings (ensure id is always 1)
+INSERT INTO `about_mednova_settings` (
+  `id`,
+  `hero_title`, `hero_subtitle_1`, `hero_subtitle_2`, `hero_image_url`,
+  `story_title`, `story_description`, `legacy_image_url`, `legacy_title`, `legacy_description`, `vision_title`, `vision_description`, `mission_title`, `mission_description`,
+  `core_pillars_title`, `core_pillars_description`, `core_pillars_json`,
+  `why_choose_us_title`, `why_choose_us_description`, `why_choose_us_json`,
+  `curriculum_journey_title`, `curriculum_journey_description`, `curriculum_stages_json`,
+  `infra_title`, `infra_description`, `infra_json`,
+  `beyond_academics_title`, `beyond_academics_description`, `beyond_academics_json`,
+  `core_values_title`, `core_values_description`, `core_values_json`,
+  `faculty_title`, `faculty_description`, `faculty_image_url`, `faculty_sub_title`, `faculty_sub_description`, `faculty_highlights_json`,
+  `principal_image_url`, `principal_message_title`, `principal_quote`, `principal_name`, `principal_role`, `principal_qualifications`
+) VALUES (
+  1,
+  'Welcome to Mednova School', '**Igniting Minds, Shaping Futures:** Your Child''s Journey of Excellence in Professional English Medium Education.', 'A CBSE-affiliated institution, meticulously crafting leaders from Nursery to Grade 12.', 'https://placehold.co/1920x800/e0e7ff/6366f1?text=Mednova+School+Facade',
+  'Our Story & Guiding Philosophy', 'Established in 2005, Mednova School has blossomed into a vibrant learning sanctuary, dedicated to holistic growth and academic mastery from the foundational years to higher secondary.', 'https://placehold.co/900x600/D1D5DB/4B5563?text=Mednova+Students', 'A Legacy of Transformative Education', 'Mednova School embarked on its journey with a profound vision: to cultivate not just scholars, but confident, compassionate, and globally-aware citizens. Our progressive approach blends the structured excellence of the CBSE curriculum with innovative teaching methodologies, ensuring that every child''s unique talent is recognized, nurtured, and celebrated within our professional English medium environment. We pride ourselves on building a strong, inclusive community that inspires a lifelong love for learning.', 'Our Vision', 'To be a leading educational institution, shaping students into resilient, ethical, and inventive individuals who actively contribute to a sustainable and diverse global society.', 'Our Mission', 'To deliver an inspiring and challenging academic program within a professional English medium setting, fostering intellectual curiosity, creativity, and critical thinking. We commit to instilling strong moral values, promoting cultural understanding, and preparing students for success in an ever-evolving world.',
+  'The Mednova Advantage: Our Core Pillars', 'Built upon foundational principles, we ensure every student thrives from Nursery to Grade 12.',
+  JSON_ARRAY(
+    JSON_OBJECT('title', 'Academic Rigor (N-12)', 'description', 'A meticulously crafted CBSE curriculum ensuring conceptual clarity and exceptional results across all grades.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><polyline points="10 2 10 10 16 10 16 2"/></svg>'),
+    JSON_OBJECT('title', 'Holistic Development', 'description', 'Nurturing intellectual, emotional, social, and physical faculties to sculpt well-rounded individuals.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18v-6a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v6"/><path d="M7 10h10"/><path d="M10 20v-2"/><path d="M14 20v-2"/><path d="M12 4V2"/><path d="M15 22H9"/><circle cx="9" cy="4" r="2"/><circle cx="15" cy="4" r="2"/></svg>'),
+    JSON_OBJECT('title', 'Future-Ready Skills', 'description', 'Empowering students with 21st-century competencies: critical thinking, creativity, collaboration, and digital fluency.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 1-7-7c0-2.34 1.25-4.32 3.5-5.32L12 2a7 7 0 0 1 7 7c0 2.34-1.25 4.32-3.5 5.32L12 22z"/><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>'),
+    JSON_OBJECT('title', 'Professional English Medium', 'description', 'An immersive, articulate environment ensuring supreme confidence and fluency in global communication.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1"/><path d="M7 11.5V9.5a1 1 0 0 1 1-1h1.5a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1z"/><path d="M14 11.5V9.5a1 1 0 0 1 1-1h1.5a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1H15a1 1 0 0 1-1-1z"/><path d="M7 17.5V15.5a1 1 0 0 1 1-1h1.5a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1z"/></svg>')
+  ),
+  'Why Choose Mednova School?', 'Distinguished by our unwavering commitment to innovation, holistic growth, and student success.',
+  JSON_ARRAY(
+    JSON_OBJECT('title', 'Personalized Learning Paths', 'description', 'Tailored educational strategies addressing individual student needs, strengths, and learning styles for optimal growth.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="22 12 16 12 19 15 16 18"/></svg>'),
+    JSON_OBJECT('title', 'Innovation & Technology Integration', 'description', 'Cutting-edge digital tools, AI literacy, and STEM focus embedded across the curriculum from early years.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>')
+  ),
+  'Our Comprehensive Curriculum Journey (Nursery to Grade 12)', 'Mednova School offers a dynamic CBSE curriculum, tailored to each developmental stage, ensuring progressive and engaging learning.',
+  JSON_ARRAY(
+    JSON_OBJECT('stage', 'Early Years Foundation (Nursery - UKG)', 'description', 'A joyful, play-based approach fostering cognitive, social, and motor skill development in a nurturing environment, sparking early curiosity.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11V3"/><path d="M12 7h.01"/></svg>'),
+    JSON_OBJECT('stage', 'Primary School (Grades 1-5)', 'description', 'Building strong foundational literacy, numeracy, and scientific inquiry through interactive, experiential learning, encouraging independent thought.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0-9.25 15.3l-.75.7 3.5 3.5.7-.75A10 10 0 0 0 12 2z"/><path d="M12 8l-4 4m0-4l4 4m4-4l-4 4m0-4l4 4"/></svg>')
+  ),
+  'World-Class Infrastructure & Facilities', 'Our meticulously designed campus offers a stimulating environment, fostering learning, creativity, and exploration.',
+  JSON_ARRAY(
+    JSON_OBJECT('title', 'Interactive Smart Classrooms', 'description', 'Equipped with cutting-edge digital learning tools for dynamic, engaging lessons.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3H6a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h4M14 3h4a2 2 0 0 1 2 2v14c0 1.1-.9 2-2 2h-4M8 21v-4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"/></svg>'),
+    JSON_OBJECT('title', 'Advanced STEM Laboratories', 'description', 'Physics, Chemistry, Biology, Computer, and Robotics labs for hands-on scientific discovery and innovation.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>')
+  ),
+  'Beyond Academics: Cultivating Passion & Purpose', 'We nurture well-rounded individuals through a rich tapestry of co-curricular activities, sparking joy and building character.',
+  JSON_ARRAY(
+    JSON_OBJECT('title', 'Vibrant Sports Programs', 'description', 'From competitive team sports to individual fitness, fostering physical prowess and sportsmanship.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v10"/><path d="M12 12l4 4"/><path d="M12 12l-4 4"/></svg>'),
+    JSON_OBJECT('title', 'Enrichment & Talent Clubs', 'description', 'Robotics, Literary, Eco, Debate, Entrepreneurship – a diverse range to ignite passions and hone skills.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>')
+  ),
+  'Our Unwavering Core Values', 'These principles guide our every action, shaping the Mednova community and its future leaders.',
+  JSON_ARRAY(
+    JSON_OBJECT('value', 'Integrity', 'description', 'Upholding honesty, ethical conduct, and strong moral principles in all interactions.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11h.01"/><path d="M12 3v5"/><path d="M12 16v5"/><path d="M3 12h5"/><path d="M16 12h5"/><path d="M7 7l1 1"/><path d="M17 17l1 1"/><path d="M7 17l1-1"/><path d="M17 7l1-1"/></svg>'),
+    JSON_OBJECT('value', 'Respect', 'description', 'Fostering profound appreciation for self, others, diversity, and the environment.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49c-3.24 3.24-6.26-3.24-9.26-3.24s-3.24 6.26-3.24 9.26a6 6 0 0 1 8.49 0L12 17l-3.54-3.54"/></svg>')
+  ),
+  'Our Pillars of Strength: The Mednova Faculty', 'Our team of highly qualified and passionate educators is the heart of Mednova, inspiring students from Nursery to Grade 12.', 'https://placehold.co/240x240/a855f7/f3e8ff?text=Mednova+Teachers', 'Inspiring Minds, Mentoring Futures', 'At Mednova School, our educators are more than instructors; they are dedicated mentors, innovators, and lifelong learners. Each faculty member brings a wealth of experience, holding advanced degrees and specializing in CBSE curriculum delivery across all developmental stages. They are committed to personalized learning, fostering intellectual curiosity from the playful explorations of Nursery to the rigorous academic challenges of Grade 12. Through engaging pedagogies, they ensure every student receives the guidance and support needed to excel.', 
+  JSON_ARRAY("Highly Qualified & Seasoned Professionals", "Masters of CBSE Curriculum & Advanced Pedagogies", "Dedicated Mentors Fostering Individual Growth & Potential", "Champions of Continuous Professional Development & Innovation"),
+  'https://placehold.co/400x400/312e81/c7d2fe?text=Mrs.+Priya+Sharma', 'A Message from Our Esteemed Principal', '"At Mednova School, we are profoundly dedicated to unlocking the unique potential within every single child. Our vision extends beyond academic excellence; it is about cultivating character, fostering critical thought, and instilling a global perspective. Within our dynamic professional English medium environment, from the wonder-filled Nursery to the ambitious corridors of Grade 12, we empower our students to be not just learners, but innovators, leaders, and compassionate human beings. We are immensely proud to partner with families in this transformative journey of education and growth."', 'Mrs. Priya Sharma', 'Principal, Mednova School', 'M.A. (English Literature), B.Ed., Advanced Certification in Educational Leadership'
+)
+ON DUPLICATE KEY UPDATE
+  `hero_title` = VALUES(`hero_title`), `hero_subtitle_1` = VALUES(`hero_subtitle_1`), `hero_subtitle_2` = VALUES(`hero_subtitle_2`), `hero_image_url` = VALUES(`hero_image_url`),
+  `story_title` = VALUES(`story_title`), `story_description` = VALUES(`story_description`), `legacy_image_url` = VALUES(`legacy_image_url`), `legacy_title` = VALUES(`legacy_title`), `legacy_description` = VALUES(`legacy_description`), `vision_title` = VALUES(`vision_title`), `vision_description` = VALUES(`vision_description`), `mission_title` = VALUES(`mission_title`), `mission_description` = VALUES(`mission_description`),
+  `core_pillars_title` = VALUES(`core_pillars_title`), `core_pillars_description` = VALUES(`core_pillars_description`), `core_pillars_json` = VALUES(`core_pillars_json`),
+  `why_choose_us_title` = VALUES(`why_choose_us_title`), `why_choose_us_description` = VALUES(`why_choose_us_description`), `why_choose_us_json` = VALUES(`why_choose_us_json`),
+  `curriculum_journey_title` = VALUES(`curriculum_journey_title`), `curriculum_journey_description` = VALUES(`curriculum_journey_description`), `curriculum_stages_json` = VALUES(`curriculum_stages_json`),
+  `infra_title` = VALUES(`infra_title`), `infra_description` = VALUES(`infra_description`), `infra_json` = VALUES(`infra_json`),
+  `beyond_academics_title` = VALUES(`beyond_academics_title`), `beyond_academics_description` = VALUES(`beyond_academics_description`), `beyond_academics_json` = VALUES(`beyond_academics_json`),
+  `core_values_title` = VALUES(`core_values_title`), `core_values_description` = VALUES(`core_values_description`), `core_values_json` = VALUES(`core_values_json`),
+  `faculty_title` = VALUES(`faculty_title`), `faculty_description` = VALUES(`faculty_description`), `faculty_image_url` = VALUES(`faculty_image_url`), `faculty_sub_title` = VALUES(`faculty_sub_title`), `faculty_sub_description` = VALUES(`faculty_sub_description`), `faculty_highlights_json` = VALUES(`faculty_highlights_json`),
+  `principal_image_url` = VALUES(`principal_image_url`), `principal_message_title` = VALUES(`principal_message_title`), `principal_quote` = VALUES(`principal_quote`), `principal_name` = VALUES(`principal_name`), `principal_role` = VALUES(`principal_role`), `principal_qualifications` = VALUES(`principal_qualifications`),
+  `updated_at` = CURRENT_TIMESTAMP;
+
+
+
+  -- SQL to create the new `academics_mednova_settings` table
+CREATE TABLE `academics_mednova_settings` (
+  `id` INT NOT NULL PRIMARY KEY DEFAULT 1,
+
+  -- Main Section
+  `main_title` VARCHAR(255) NULL COMMENT 'e.g., "Academic Excellence"',
+  `main_description` TEXT NULL,
+
+  -- Academic Journey Section
+  `journey_title` VARCHAR(255) NULL COMMENT 'e.g., "Our Academic Journey"',
+  `academic_levels_json` JSON NULL COMMENT 'Array of {title, subtitle, description, subjects array, icon}',
+
+  -- Holistic Learning Section
+  `holistic_title` VARCHAR(255) NULL COMMENT 'e.g., "Our Holistic Learning Approach"',
+  `holistic_description` TEXT NULL,
+  `holistic_items_json` JSON NULL COMMENT 'Array of {title, description, icon}',
+
+  -- Academic Features Section
+  `features_title` VARCHAR(255) NULL COMMENT 'e.g., "Key Academic Features"',
+  `academic_features_json` JSON NULL COMMENT 'Array of {title, description, icon}',
+
+  -- Auditing
+  `updated_by_admin_id` INT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT `fk_academics_mednova_settings_updater`
+    FOREIGN KEY (`updated_by_admin_id`) REFERENCES `admins`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Insert/Update initial data for academics_mednova_settings (ensure id is always 1)
+INSERT INTO `academics_mednova_settings` (
+  `id`,
+  `main_title`, `main_description`,
+  `journey_title`, `academic_levels_json`,
+  `holistic_title`, `holistic_description`, `holistic_items_json`,
+  `features_title`, `academic_features_json`
+) VALUES (
+  1,
+  'Academic Excellence',
+  'Our comprehensive curriculum from Nursery to Class XII ensures holistic development and prepares students for future challenges with confidence and competence.',
+  'Our Academic Journey',
+  JSON_ARRAY(
+    JSON_OBJECT('title', 'Nursery & Pre-Primary', 'subtitle', 'Ages 3-5', 'description', 'Our nurturing environment introduces young learners to the joy of discovery through **play-based learning**. We focus on developing foundational social skills, creativity, and basic literacy and numeracy concepts through interactive and sensory activities.', 'subjects', 'Language Development, Number Concepts, Creative Arts, Physical Development', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="m14 19-3 3v-2l-3-3m0 0-3-3L2 14v-2l2-2m-2 2 3-3L5 9a2 2 0 0 1 3-3 2 2 0 0 1 3 3v5c0 1-1.5 3-3 3-1.5 0-3-2-3-3v-5m10-2c-1.5 0-3 2-3 3v5c0 1 1.5 3 3 3 1.5 0 3-2 3-3V9m-3-3a2 2 0 0 1 3 3v5c0 1.5 1.5 3 3 3l-3 3-2-2"/></svg>'),
+    JSON_OBJECT('title', 'Primary (Classes I-V)', 'subtitle', 'Ages 6-10', 'description', 'This stage is the cornerstone of a student''s academic journey. We build a solid foundation with a strong emphasis on core subjects using **inquiry-based and project-based learning**. Students are encouraged to ask questions, think critically, and collaborate on real-world projects.', 'subjects', 'English, Mathematics, Science, Social Studies, Computer Science', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'),
+    JSON_OBJECT('title', 'Middle School (Classes VI-VIII)', 'subtitle', 'Ages 11-13', 'description', 'The curriculum expands to foster **subject specialization and analytical thinking**. Students are introduced to more complex topics and are guided to explore their individual interests through interdisciplinary projects, preparing them for the rigors of board examinations.', 'subjects', 'Advanced Mathematics, Physics, Chemistry, Biology, History, Geography', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M6 19c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M12 21c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M18 19c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M20 17H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2z"/><path d="M20 7H4"/></svg>')
+  ),
+  'Our Holistic Learning Approach',
+  'Education at Mednova School goes beyond textbooks. We believe in nurturing well-rounded individuals through a supportive and enriching ecosystem.',
+  JSON_ARRAY(
+    JSON_OBJECT('title', 'Personalized Mentorship', 'description', 'Dedicated teachers provide one-on-one guidance to help students with academic challenges and personal growth.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>'),
+    JSON_OBJECT('title', 'Technology Integration', 'description', 'Our smart classrooms and e-learning platforms ensure a modern, interactive, and engaging educational experience.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect width="20" height="12" x="2" y="5" rx="2"/><rect width="12" height="2" x="6" y="15" rx="1"/><rect width="10" height="4" x="7" y="17" rx="1"/><path d="M12 5h.01"/></svg>'),
+    JSON_OBJECT('title', 'Values & Ethics', 'description', 'We instill strong moral values and a sense of social responsibility, helping students become compassionate global citizens.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3 3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z"/><path d="M8.2 11.2a4.5 4.5 0 0 0 0 5.6M15.8 11.2a4.5 4.5 0 0 1 0 5.6"/></svg>')
+  ),
+  'Key Academic Features',
+  JSON_ARRAY(
+    JSON_OBJECT('title', 'CBSE Curriculum', 'description', 'Following **NCERT guidelines** with a focus on conceptual understanding and application-based learning, not rote memorization.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'),
+    JSON_OBJECT('title', 'State-of-Art Labs', 'description', 'Well-equipped and modern **Physics, Chemistry, Biology, and Computer Labs** provide hands-on experience for practical learning.', 'icon', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M6 19c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M12 21c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M18 19c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/><path d="M20 17H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2z"/><path d="M20 7H4"/></svg>')
+  )
+)
+ON DUPLICATE KEY UPDATE
+  `main_title` = VALUES(`main_title`), `main_description` = VALUES(`main_description`),
+  `journey_title` = VALUES(`journey_title`), `academic_levels_json` = VALUES(`academic_levels_json`),
+  `holistic_title` = VALUES(`holistic_title`), `holistic_description` = VALUES(`holistic_description`), `holistic_items_json` = VALUES(`holistic_items_json`),
+  `features_title` = VALUES(`features_title`), `academic_features_json` = VALUES(`academic_features_json`),
+  `updated_at` = CURRENT_TIMESTAMP;
+
+
+-- Table for News Articles
+CREATE TABLE `news_articles` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `date` DATE NOT NULL,
+  `category` VARCHAR(100) NULL,
+  `image_url` VARCHAR(255) NULL,
+  `excerpt` TEXT NULL,
+  `content` TEXT NULL,
+  `admin_id` INT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table for Upcoming Events
+CREATE TABLE `upcoming_events` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `event_date` VARCHAR(100) NOT NULL COMMENT 'Flexible text field for date ranges',
+  `time` VARCHAR(100) NULL,
+  `location` VARCHAR(255) NULL,
+  `type` VARCHAR(100) NULL COMMENT 'e.g., Competition, Workshop',
+  `image_url` VARCHAR(255) NULL,
+  `description` TEXT NULL,
+  `admin_id` INT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE `contact_settings` (
+  `id` INT NOT NULL PRIMARY KEY DEFAULT 1,
+  `location_address` TEXT NULL,
+  `location_map_url` VARCHAR(1000) NULL,
+  `phone_general` VARCHAR(50) NULL,
+  `phone_admissions` VARCHAR(50) NULL,
+  `email_general` VARCHAR(100) NULL,
+  `email_admissions` VARCHAR(100) NULL,
+  `office_hours_weekdays` VARCHAR(100) NULL,
+  `office_hours_saturday` VARCHAR(100) NULL,
+  `office_hours_sunday` VARCHAR(100) NULL,
+  `updated_by_admin_id` INT NULL,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insert a default row so the admin form has something to update
+INSERT INTO `contact_settings` (`id`, `location_address`, `location_map_url`, `phone_general`, `phone_admissions`, `email_general`, `email_admissions`, `office_hours_weekdays`, `office_hours_saturday`, `office_hours_sunday`) VALUES
+(1, 'Mednova School Main Campus,\n123 Education Lane, Knowledge City,\nState 98765, Country', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15277.561490212004!2d78.36394595!3d17.433965999999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcbd829f0000001%3A0x861c1e0e1e0e1e0e!2sMednova%20Hospital%20and%20Medical%20Centre!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin', '+1 (234) 567-890', '+1 (234) 567-891', 'info@mednovaschool.com', 'admissions@mednovaschool.com', 'Monday - Friday: 8:00 AM - 4:00 PM', 'Saturday: 9:00 AM - 1:00 PM (Admissions Only)', 'Sunday: Closed');
+
+
+CREATE TABLE `contact_inquiries` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `subject` VARCHAR(255) NOT NULL,
+  `message` TEXT NOT NULL,
+  `status` ENUM('Pending', 'Replied') NOT NULL DEFAULT 'Pending',
+  `replied_by_admin_id` INT NULL,
+  `reply_message` TEXT NULL,
+  `replied_at` DATETIME NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`replied_by_admin_id`) REFERENCES `admins`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+-- Add new columns to admissions_settings table
+ALTER TABLE `admissions_settings`
+ADD COLUMN `is_admissions_open` BOOLEAN DEFAULT TRUE AFTER `important_dates_json`,
+ADD COLUMN `application_start_date` DATE NULL AFTER `is_admissions_open`,
+ADD COLUMN `application_end_date` DATE NULL AFTER `application_start_date`,
+ADD COLUMN `application_link` VARCHAR(255) NULL AFTER `application_end_date`,
+ADD COLUMN `notes_on_admissions_status` TEXT NULL AFTER `application_link`,
+ADD COLUMN `admissions_details_pdf_url` VARCHAR(255) NULL AFTER `notes_on_admissions_status`,
+ADD COLUMN `admissions_criteria_pdf_url` VARCHAR(255) NULL AFTER `admissions_details_pdf_url`;
+
+
+-- Add new text columns for admission details and criteria
+ALTER TABLE `admissions_settings`
+ADD COLUMN `admissions_details_text` TEXT NULL AFTER `admissions_criteria_pdf_url`,
+ADD COLUMN `admissions_criteria_text` TEXT NULL AFTER `admissions_details_text`;
+
+
+
+ALTER TABLE `admissions_settings`
+DROP COLUMN `admissions_details_pdf_url`,
+DROP COLUMN `admissions_criteria_pdf_url`;
+-- Add PDF URL columns for admissions details and criteria
+-- (These are the ones still missing based on your DESCRIBE output)
+ALTER TABLE `admissions_settings`
+ADD COLUMN `admissions_details_pdf_url` VARCHAR(255) NULL AFTER `notes_on_admissions_status`;
+
+ALTER TABLE `admissions_settings`
+ADD COLUMN `admissions_criteria_pdf_url` VARCHAR(255) NULL AFTER `admissions_details_pdf_url`;
+
+
+-- Add new boolean columns for section enable/disable status
+-- Run these after ensuring the PDF URL and text columns are already present.
+
+ALTER TABLE `admissions_settings`
+ADD COLUMN `admissions_section_enabled` BOOLEAN DEFAULT TRUE AFTER `admissions_section_description`;
+
+ALTER TABLE `admissions_settings`
+ADD COLUMN `admissions_process_enabled` BOOLEAN DEFAULT TRUE AFTER `admission_process_json`;
+
+ALTER TABLE `admissions_settings`
+ADD COLUMN `important_dates_enabled` BOOLEAN DEFAULT TRUE AFTER `important_dates_json`;
+
+
+
+ALTER TABLE `assignments`
+ADD COLUMN `last_updated_by_admin_id` INT NULL COMMENT 'ID of the admin who last updated this assignment' AFTER `updated_at`,
+ADD CONSTRAINT `fk_assignments_admin_updater`
+    FOREIGN KEY (`last_updated_by_admin_id`) REFERENCES `admins`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE;
+
+    
+
+
+
+    -- Add columns for blocking a teacher
+ALTER TABLE `teachers`
+ADD COLUMN `block_reason` TEXT NULL AFTER `is_blocked`,
+ADD COLUMN `blocked_by_user_id` INT NULL AFTER `block_reason`,
+ADD COLUMN `blocked_by_user_role` VARCHAR(50) NULL AFTER `blocked_by_user_id`, -- e.g., 'Principal', 'Admin'
+ADD COLUMN `blocked_at` DATETIME NULL AFTER `blocked_by_user_role`;
+
+-- Add columns for unblocking a teacher
+ALTER TABLE `teachers`
+ADD COLUMN `unblock_reason` TEXT NULL AFTER `blocked_at`,
+ADD COLUMN `unblocked_by_user_id` INT NULL AFTER `unblock_reason`,
+ADD COLUMN `unblocked_by_user_role` VARCHAR(50) NULL AFTER `unblocked_by_user_id`,
+ADD COLUMN `unblocked_at` DATETIME NULL AFTER `unblocked_by_user_role`;
+
+ALTER TABLE `leave_applications`
+ADD COLUMN `notes` TEXT NULL AFTER `reviewed_at`;
+
+ALTER TABLE `teachers` ADD COLUMN IF NOT EXISTS `last_seen` TIMESTAMP NULL DEFAULT NULL AFTER `image_url`;
+
+ALTER TABLE `school_documents`
+ADD COLUMN `public_id` VARCHAR(255) NULL AFTER `file_url`;
+
+

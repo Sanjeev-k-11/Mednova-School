@@ -1,0 +1,8 @@
+{
+    "require": {
+        "monolog/monolog": "2.10",
+        "cloudinary/cloudinary_php": "^3.1",
+        "phpmailer/phpmailer": "^6.10",
+        "minishlink/web-push": "^9.0"
+    }
+}
