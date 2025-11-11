@@ -154,7 +154,8 @@ Use the following credentials to test the different user roles:
 *   **Student Portal**
     <img width="1918" height="861" alt="image" src="https://github.com/user-attachments/assets/d7ce2347-503f-46e0-9558-cf9254de2123" />
 
-*   **Student Portal**
+*   **Teacher Portal**
+  
     <img width="1919" height="855" alt="image" src="https://github.com/user-attachments/assets/5dd262c0-4ca0-4b01-8d04-bd55d83a34ea" />
     <img width="1919" height="858" alt="image" src="https://github.com/user-attachments/assets/6576e63f-def2-4e07-8f66-e0927a3f5bc5" />
 
